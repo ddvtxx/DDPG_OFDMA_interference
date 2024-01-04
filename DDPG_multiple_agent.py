@@ -64,7 +64,7 @@ for i_episode in range(episode):
             DDPG_agent = agent_array[i_agent]
             observation = observation_array[i_agent]
             done = False
-            action_pre = DDPG_agent.choose_action(observation,train=True)
+            action_pre = DDPG_agent.choose_action(observation,train=False)
             user_list = [1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,0,0,0]
             action_pre = action_pre.reshape(numAPuser,numRU)
             action_0 = np.zeros_like(action_pre)
