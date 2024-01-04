@@ -5,7 +5,7 @@ import math
 
 class environment_base:
     def __init__(self,numUserAP,numRU,Linkmode,RU_mode):
-        self.numAP = 4 
+        self.numAP = 9
         self.numUserAP = numUserAP 
         self.cellShape = 'square'
         self.size = 50 
@@ -333,14 +333,11 @@ class environment_base:
                 interference_uplink = interference_uplink.sum(axis=0)
                 #calculate the SINR
                 sinr_uplink[i] = self.signal_strength[i]/(self.N0 + interference_uplink)
-                #store the interference for agent AP
-                if i == 3:
-                    interference_sum+=interference_uplink
                 self.n_AP_n_user_bitrate[i] = self.bwRU * np.log2(1 + sinr_uplink[i])
             self.n_AP_bitrate = self.n_AP_n_user_bitrate.sum(axis=2).sum(axis=1)
             self.system_bitrate = self.n_AP_bitrate.sum(axis=0)
                     
-        return self.system_bitrate, interference_sum
+        return self.system_bitrate
 
 
 
