@@ -114,7 +114,7 @@ for i_episode in range(episode):
         #only work for 4-agent
         RU_mapper = np.vstack((action_array[0].reshape(1,numAPuser,numRU), action_array[1].reshape(1,numAPuser,numRU), action_array[2].reshape(1,numAPuser,numRU), action_array[3].reshape(1,numAPuser,numRU)))
         system_bitrate, system_interference = test_env.calculate_4_cells(RU_mapper)
-        key_value = system_bitrate/(1e+6)-180 # 180 for (5.8)
+        key_value = system_bitrate/(1e+6)
         reward = key_value
         # to 187000000
         # key_value = system_bitrate/(1e+6)-180
