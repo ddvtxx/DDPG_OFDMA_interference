@@ -269,15 +269,15 @@ class environment_base:
         elif self.RU_mode == 3:
             #self.numRU from 8 to 80
             # Initialize variables to store channel gains and RU allocations.
-            AP_user_channel_gain = np.zeros((3,self.numUserAP,self.numRU))
-            ru_3AP = np.zeros((3,self.numUserAP,self.numRU))
+            AP_user_channel_gain = np.zeros((8,self.numUserAP,self.numRU))
+            ru_3AP = np.zeros((8,self.numUserAP,self.numRU))
             # Get the channel gain between the same APs.
-            for i in range(3):
-                for j in range(3):
+            for i in range(8):
+                for j in range(8):
                     if i == j:
                         AP_user_channel_gain[i,:,:] = self.channel_gain[i][j] 
             
-            for k in range(3):
+            for k in range(8):
                 user_list = [1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,0,0,0]
                 key = AP_user_channel_gain[k,:,:]
                 
