@@ -116,6 +116,8 @@ for i_episode in range(episode):
         system_bitrate, system_interference = test_env.calculate_4_cells(RU_mapper)
         key_value = system_bitrate/(1e+6)-180
         reward = key_value
+        # to 187000000
+        # key_value = system_bitrate/(1e+6)-180
         #change the reward to interference
         # reward = 1/(system_interference.sum())
         x_, y_ = test_env.senario_user_local_move(x,y)
