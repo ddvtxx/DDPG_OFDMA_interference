@@ -12,9 +12,9 @@ class DDPG:
                  actor_fc1_dim, actor_fc2_dim, actor_fc3_dim, actor_fc4_dim, 
                  critic_fc1_dim, critic_fc2_dim, critic_fc3_dim, critic_fc4_dim,  
                  ckpt_dir,
-                 gamma=0.99, tau=0.005, action_noise=0.1, max_size=1000000,
+                 gamma=0.99, tau=0.005, action_noise=0.1, max_size=100000,
                  batch_size=128):
-        
+        #change the max_size from 1000000 to 100000
         self.gamma = gamma
         self.tau = tau
         self.action_noise = action_noise
