@@ -12,21 +12,14 @@ test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
 x_init,y_init = test_env.senario_user_local_init()
 x,y = x_init,y_init
 userinfo = test_env.senario_user_info(x,y)
+#(ap,ap,user,ru)
 channel_gain_obs = test_env.channel_gain_calculate()
+mapper_1 = test_env.n_AP_RU_mapper()
+mapper_2 = test_env.n_AP_RU_mapper()
+mapper_3 = test_env.n_AP_RU_mapper()
+ru_mapper = np.vstack((mapper_1, mapper_2, mapper_3))
 
-#(ap,user,ru)
-observation_array=[]
-for i_observation in range(4):
-    #select the channel gain as the state
-    # observation = channel_gain_obs[i_observation,:,:]
-    # observation_array.append(observation)
-    #select the possible interference as the state
-    #(ap,ap,user,ru)
-    observation = np.zeros((numAPuser,numRU))
-    for i_user in range(numAPuser):
-        for i_ru in range(numRU):
-            observation[i_user, i_ru] = channel_gain_obs[:,:,:,i_ru].sum(axis=0).sum(axis=0).sum(axis=0) - channel_gain_obs[i_observation,i_observation,i_user,i_ru]
-    observation_array.append(observation)
+system_bitrate = test_env.calculate_4_cells(ru_mapper)
 
-print(observation_array[1])
-print(channel_gain_obs[1])
+print(system_bitrate)
+
