@@ -105,5 +105,5 @@ for i_episode in range(episode):
 
 dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
 #dataframe.to_csv("./ddpg_result/bitrate_"+str(numAPuser)+".csv", index=False,sep=',')
-dataframe.to_csv("./result/bitrate_reward_change.csv", index=False,sep=',')
+dataframe.to_csv("./result/bitrate_single_9AP.csv", index=False,sep=',')
 
