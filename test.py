@@ -13,20 +13,13 @@ x_init,y_init = test_env.senario_user_local_init()
 x,y = x_init,y_init
 userinfo = test_env.senario_user_info(x,y)
 channel_gain_obs = test_env.channel_gain_calculate()
+#(ap,ap,user,ru)
+ru_mapper = test_env.n_AP_RU_mapper()
+strength_tem = channel_gain_obs[0][0] * ru_mapper
+strength_sum = strength_tem.sum(axis=2)
+# print(range(channel_gain_obs.shape[0]))
+# for strength_total in strength_sum:
+#     for i in range():
 
-#(ap,user,ru)
-observation_array=[]
-for i_observation in range(4):
-    #select the channel gain as the state
-    # observation = channel_gain_obs[i_observation,:,:]
-    # observation_array.append(observation)
-    #select the possible interference as the state
-    #(ap,ap,user,ru)
-    observation = np.zeros((numAPuser,numRU))
-    for i_user in range(numAPuser):
-        for i_ru in range(numRU):
-            observation[i_user, i_ru] = channel_gain_obs[:,:,:,i_ru].sum(axis=0).sum(axis=0).sum(axis=0) - channel_gain_obs[i_observation,i_observation,i_user,i_ru]
-    observation_array.append(observation)
+print(strength_tem)
 
-print(observation_array[1])
-print(channel_gain_obs[1])
