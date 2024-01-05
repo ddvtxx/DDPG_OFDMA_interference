@@ -17,6 +17,7 @@ def water_filling(channel_gains, P_total, epsilon=1e-5, max_iterations=1000):
     """
     scenarios, users, sub_channels = channel_gains.shape
     power_allocation = np.zeros((scenarios, users, sub_channels))
+    channel_gains_total = channel_gains.sum(axis=2)
 
     # Perform water filling for each user in each scenario
     for scenario in range(scenarios):
@@ -24,6 +25,7 @@ def water_filling(channel_gains, P_total, epsilon=1e-5, max_iterations=1000):
             user_channel_gains = channel_gains[scenario, user, :]
             non_zero_gains_indices = user_channel_gains > 0
             non_zero_gains = user_channel_gains[non_zero_gains_indices]
+            non_zero_gains = non_zero_gains/channel_gains_total[scenario][user]*10
             num_non_zero_gains = len(non_zero_gains)
 
             if num_non_zero_gains == 0:
@@ -61,53 +63,53 @@ def water_filling(channel_gains, P_total, epsilon=1e-5, max_iterations=1000):
     return power_allocation
 
 # Example usage:
-# numAPuser = 5
-# numRU = 8
-# numSenario = 4
-# linkmode = 'uplink'
-# ru_mode = 3
-# episode = 2000
-# max_iteration = 200
-# test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
-# x_init,y_init = test_env.senario_user_local_init()
-# x,y = x_init,y_init
-# userinfo = test_env.senario_user_info(x,y)
-# channel_gain_obs = test_env.channel_gain_calculate()
-# #(ap,ap,user,ru)
-# ru_mapper = test_env.n_AP_RU_mapper()
-# ru_mapper = np.vstack((ru_mapper,ru_mapper))
+numAPuser = 5
+numRU = 8
+numSenario = 4
+linkmode = 'uplink'
+ru_mode = 3
+episode = 2000
+max_iteration = 200
+test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
+x_init,y_init = test_env.senario_user_local_init()
+x,y = x_init,y_init
+userinfo = test_env.senario_user_info(x,y)
+channel_gain_obs = test_env.channel_gain_calculate()
+#(ap,ap,user,ru)
+ru_mapper = test_env.n_AP_RU_mapper()
+ru_mapper = np.vstack((ru_mapper,ru_mapper))
 
-# # strength_tem = np.array(list(map(lambda x:channel_gain_obs[x][x] * ru_mapper[x],range(channel_gain_obs.shape[0]))))
-# # power_allocation = water_filling(strength_tem, 1)
+# strength_tem = np.array(list(map(lambda x:channel_gain_obs[x][x] * ru_mapper[x],range(channel_gain_obs.shape[0]))))
+# power_allocation = water_filling(strength_tem, 1)
 
-# # print("Power Allocation: ", power_allocation)
-# # result = power_allocation * strength_tem
-# # print(strength_tem)
-# # print(power_allocation)
-# # print(result)
+# print("Power Allocation: ", power_allocation)
+# result = power_allocation * strength_tem
+# print(strength_tem)
+# print(power_allocation)
+# print(result)
 
-# result = test_env.calculate_4_cells(ru_mapper)
-# # print(result)
-# print(ru_mapper.sum(axis=2).shape)
+result = test_env.calculate_4_cells(ru_mapper)
+# print(result)
+print(result)
 
-channel_gains = np.array([
-    # Scenario 1
-    [
-        # User 1
-        [2.57243092e-07, 1.87520480e-07, 1.88574745e-07, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
-        # User 2
-        [2.57243092e-07, 1.87520480e-07, 1.88574745e-07, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00]
-    ],
-    # Scenario 2
-    [
-        # User 1
-        [2.57243092e-07, 1.87520480e-07, 1.88574745e-07, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
-        # User 2
-        [2.57243092e-07, 1.87520480e-07, 1.88574745e-07, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00]
-    ]
-])
-P_total = 10  # Total power budget for each user
+# channel_gains = np.array([
+#     # Scenario 1
+#     [
+#         # User 1
+#         [2.57243092e-07, 1.87520480e-07, 1.88574745e-07, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+#         # User 2
+#         [2.57243092e-07, 1.87520480e-07, 1.88574745e-07, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00]
+#     ],
+#     # Scenario 2
+#     [
+#         # User 1
+#         [2.57243092e-07, 1.87520480e-07, 1.88574745e-07, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+#         # User 2
+#         [2.57243092e-07, 1.87520480e-07, 1.88574745e-07, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00]
+#     ]
+# ])
+# P_total = 1  # Total power budget for each user
 
-power_allocation = water_filling(channel_gains, P_total)
+# power_allocation = water_filling(channel_gains, P_total)
 
-print("Power Allocation: ", power_allocation)
+# print("Power Allocation: ", power_allocation)
