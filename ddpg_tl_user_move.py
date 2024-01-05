@@ -34,7 +34,6 @@ create_directory('./DDPG/',sub_paths=['Actor', 'Target_actor', 'Critic', 'Target
 #test_name = 'tanlan_junfen'
 reward_history = []
 system_bitrate_history = []
-system_interfecence_history = []
 reward_ave_history = []
 system_ave_bitrate_history = []
 system_ave_interfecence_history = []
@@ -86,11 +85,9 @@ for i_episode in range(episode):
     RU_mapper = np.vstack((AP123_RU_mapper,action_1))
     #RU_mapper = np.vstack((action_1,action_1,action_1,action_1))
 
-    system_bitrate, system_interference = test_env.calculate_4_cells(RU_mapper)
+    system_bitrate = test_env.calculate_4_cells(RU_mapper)
     key_value = system_bitrate/(1e+4)
-    #reward = key_value  
-    #change the reward to interference
-    reward = 1/(system_interference.sum()+1e-7)
+    reward = key_value  
     x_,y_ = test_env.senario_user_local_move(x,y)
     userinfo_ = test_env.senario_user_info(x_,y_)
     channel_gain_obs_ = test_env.channel_gain_calculate()
@@ -104,47 +101,20 @@ for i_episode in range(episode):
     x,y=x_,y_
 
     system_bitrate_history.append(system_bitrate)
-    #the less actual interference is, the higher reward_interference is
-    system_interfecence_history.append(1/(system_interference.sum()+1e-7))
+
     reward_history.append(reward)
     if i == max_iteration-1:
       reward_ave = np.mean(reward_history)
       system_bitrate_ave = np.mean(system_bitrate_history)
-      system_interference_ave = np.mean(system_interfecence_history)
       reward_history = []
       system_bitrate_history = []
       system_interfecence_history = []
       reward_ave_history.append(reward_ave)
       system_ave_bitrate_history.append(system_bitrate_ave)
-      system_ave_interfecence_history.append(system_interference_ave)
-      print('i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave, 'system_interfecence =', system_interference_ave)
+      print('i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
 
-#fig = plt.figure()
-#ax = fig.add_subplot(1,1,1)
-#ax.plot(range(len(reward_ave_history)),reward_ave_history,label="system bitrate")
-#plt.title('reward show',fontsize=20)
-#plt.savefig("DDPG_reward.png")
-#plt.show()
 
-#fig = plt.figure()
-#ax = fig.add_subplot(1,1,1)
-#ax.plot(range(len(system_ave_bitrate_history)),system_ave_bitrate_history)
-#plt.title('system bitrate show',fontsize=20)
-#plt.savefig("DDPG_system_bitrate.png")
-#plt.show()
 
-#result_dict = {'System Bitrate':system_ave_bitrate_history,'Reward':reward_ave_history}
+# dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
+# dataframe.to_csv("./result/bitrate_reward_change.csv", index=False,sep=',')
 
-#result_save = pd.DataFrame(result_dict)
-#result_save.to_csv('DDPG_result.csv',mode='w')
-
-dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-#dataframe.to_csv("./ddpg_result/bitrate_"+str(numAPuser)+".csv", index=False,sep=',')
-dataframe.to_csv("./result/bitrate_reward_change.csv", index=False,sep=',')
-
-dataframe_in=pd.DataFrame({'interference':system_ave_interfecence_history})
-dataframe_in.to_csv("./result/interference_reward_change.csv", index=False,sep=',')
-
-#files.download("DDPG_system_bitrate.png")
-#files.download("DDPG_reward.png")  
-#files.download("DDPG_result.csv")
