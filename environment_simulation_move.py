@@ -305,18 +305,78 @@ class environment_base:
             self.ru_mapper = ru_3AP
         return self.ru_mapper
 
+    def water_filling(channel_gains, P_total, epsilon=1e-5, max_iterations=1000):
+        """
+        Perform water filling algorithm on a given set of channel gains for multiple users in multiple scenarios.
+        
+        Args:
+        - channel_gains: 3D numpy array of channel gains for each scenario, user, and sub-channel
+        - P_total: total power budget for each user
+        - epsilon: tolerance for convergence
+        - max_iterations: maximum number of iterations to prevent infinite loop
+        
+        Returns:
+        - power_allocation: 3D numpy array of power allocated to each scenario, user, and sub-channel
+        """
+        scenarios, users, sub_channels = channel_gains.shape
+        power_allocation = np.zeros((scenarios, users, sub_channels))
+
+        # Perform water filling for each user in each scenario
+        for scenario in range(scenarios):
+            for user in range(users):
+                user_channel_gains = channel_gains[scenario, user, :]
+                non_zero_gains_indices = user_channel_gains > 0
+                non_zero_gains = user_channel_gains[non_zero_gains_indices]
+                num_non_zero_gains = len(non_zero_gains)
+
+                if num_non_zero_gains == 0:
+                    continue  # Skip if user has no channel gains
+
+                # Initialize water level based on total power and number of non-zero gains
+                water_level = P_total / num_non_zero_gains + np.sum(non_zero_gains) / num_non_zero_gains
+                
+                iteration = 0
+                while iteration < max_iterations:
+                    iteration += 1
+                    
+                    # Calculate power allocation for non-zero gains
+                    power_allocation_temp = np.maximum(water_level - non_zero_gains, 0)
+                    
+                    # Sum of power allocated must not exceed P_total
+                    P_total_used = np.sum(power_allocation_temp)
+                    
+                    # Check if the total power used is within tolerance
+                    if np.abs(P_total - P_total_used) < epsilon:
+                        break
+                    
+                    # Adjust the water level
+                    water_level += (P_total - P_total_used) / num_non_zero_gains
+
+                # Ensure we did not exceed maximum iterations
+                if iteration == max_iterations:
+                    print(f"Warning: Maximum iterations reached for user {user} in scenario {scenario}.")
+
+                # Map allocated power back to original channels, including zeros
+                allocated_power = np.zeros_like(user_channel_gains)
+                allocated_power[non_zero_gains_indices] = power_allocation_temp
+                power_allocation[scenario, user, :] = allocated_power
+
+        return power_allocation
+
     #calculate the system bit rate
     def calculate_4_cells(self,ru_mapper_nAP):
 
         self.signal_strength = np.array(list(map(lambda x:self.channel_gain[x][x] * ru_mapper_nAP[x],range(self.channel_gain.shape[0]))))
-        #get how many ru do a certain user have
-        ru_per_user = ru_mapper_nAP.sum(axis=2) 
-        ru_per_user = ru_per_user.reshape(self.numAP, self.numUserAP ,1 )
-        ru_per_user = np.tile(ru_per_user, (1,1,self.numRU))
-        ru_per_user_picked = ru_per_user == 0
-        ru_per_user = ru_per_user + ru_per_user_picked.astype(int)
-        #allocate signal power averagely due to 
-        self.signal_strength = self.signal_strength / ru_per_user
+        # #get how many ru do a certain user have
+        # ru_per_user = ru_mapper_nAP.sum(axis=2) 
+        # ru_per_user = ru_per_user.reshape(self.numAP, self.numUserAP ,1 )
+        # ru_per_user = np.tile(ru_per_user, (1,1,self.numRU))
+        # ru_per_user_picked = ru_per_user == 0
+        # ru_per_user = ru_per_user + ru_per_user_picked.astype(int)
+        # #allocate signal power averagely due to 
+        # self.signal_strength = self.signal_strength / ru_per_user
+        power_allocation = self.water_filling(self.signal_strength, 1)
+        self.signal_strength = self.signal_strength*power_allocation
         
         if self.Linkmode == 'uplink':
             sinr_uplink = np.zeros((self.numAP,self.numUserAP,self.numRU))
@@ -326,7 +386,7 @@ class environment_base:
                 interference_uplink = np.zeros((self.numAP,self.numUserAP,self.numRU))
                 for j in range(self.numAP):
                     if i!=j:
-                        interference = (self.channel_gain[i][j]*ru_mapper_nAP[i]/ru_per_user[i]).sum(axis=0).reshape(1,self.numRU)
+                        interference = (self.channel_gain[i][j]*ru_mapper_nAP[i]*power_allocation[i]).sum(axis=0).reshape(1,self.numRU)
                         interference_uplink[j] = interference.repeat(self.channel_gain.shape[2],axis=0)
                 interference_uplink = interference_uplink.sum(axis=0)
                 #calculate the SINR
