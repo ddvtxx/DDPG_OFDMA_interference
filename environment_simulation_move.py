@@ -305,7 +305,7 @@ class environment_base:
             self.ru_mapper = ru_3AP
         return self.ru_mapper
 
-    def water_filling(channel_gains, P_total, epsilon=1e-5, max_iterations=1000):
+    def water_filling(self, channel_gains, P_total, epsilon=1e-5, max_iterations=1000):
         """
         Perform water filling algorithm on a given set of channel gains for multiple users in multiple scenarios.
         
@@ -320,6 +320,7 @@ class environment_base:
         """
         scenarios, users, sub_channels = channel_gains.shape
         power_allocation = np.zeros((scenarios, users, sub_channels))
+        channel_gains_total = channel_gains.sum(axis=2)
 
         # Perform water filling for each user in each scenario
         for scenario in range(scenarios):
@@ -327,20 +328,21 @@ class environment_base:
                 user_channel_gains = channel_gains[scenario, user, :]
                 non_zero_gains_indices = user_channel_gains > 0
                 non_zero_gains = user_channel_gains[non_zero_gains_indices]
+                non_zero_gains = non_zero_gains/channel_gains_total[scenario][user]*10
                 num_non_zero_gains = len(non_zero_gains)
 
                 if num_non_zero_gains == 0:
                     continue  # Skip if user has no channel gains
 
                 # Initialize water level based on total power and number of non-zero gains
-                water_level = P_total / num_non_zero_gains + np.sum(non_zero_gains) / num_non_zero_gains
+                water_level = P_total / num_non_zero_gains + np.sum(1 / non_zero_gains) / num_non_zero_gains
                 
                 iteration = 0
                 while iteration < max_iterations:
                     iteration += 1
                     
                     # Calculate power allocation for non-zero gains
-                    power_allocation_temp = np.maximum(water_level - non_zero_gains, 0)
+                    power_allocation_temp = np.maximum(water_level - 1 / non_zero_gains, 0)
                     
                     # Sum of power allocated must not exceed P_total
                     P_total_used = np.sum(power_allocation_temp)
