@@ -21,5 +21,5 @@ strength_sum = strength_tem.sum(axis=2)
 # for strength_total in strength_sum:
 #     for i in range():
 
-print(strength_tem)
+print(strength_sum)
 
