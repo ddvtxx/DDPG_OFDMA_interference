@@ -19,7 +19,7 @@ numRU = 8
 numSenario = 9
 linkmode = 'uplink'
 ru_mode = 3
-episode = 600
+episode = 800
 max_iteration = 200
 test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
 
