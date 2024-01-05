@@ -58,18 +58,6 @@ for i_episode in range(episode):
         observation = channel_gain_obs[i_observation,:,:]
         observation_array.append(observation)
 
-        #select the possible interference as the state
-        #(ap,ap,user,ru)
-        # observation = np.zeros((numAPuser,numRU))
-        # for i_user in range(numAPuser):
-        #     for i_ru in range(numRU):
-        #         observation[i_user, i_ru] = channel_gain_obs[:,:,:,i_ru].sum(axis=0).sum(axis=0).sum(axis=0) - channel_gain_obs[i_observation,i_observation,i_user,i_ru]
-        # observation_array.append(observation)
-            
-
-                
-                
-
     #iteration start
     for i in range(max_iteration):
         action_array = []
@@ -113,13 +101,11 @@ for i_episode in range(episode):
             action_array.append(action_0)
         #only work for 4-agent
         RU_mapper = np.vstack((action_array[0].reshape(1,numAPuser,numRU), action_array[1].reshape(1,numAPuser,numRU), action_array[2].reshape(1,numAPuser,numRU), action_array[3].reshape(1,numAPuser,numRU)))
-        system_bitrate, system_interference = test_env.calculate_4_cells(RU_mapper)
+        system_bitrate = test_env.calculate_4_cells(RU_mapper)
         key_value = system_bitrate/(1e+6)-180 # 180 for (5.8)
         reward = key_value
         # to 187000000
         # key_value = system_bitrate/(1e+6)-180
-        #change the reward to interference
-        # reward = 1/(system_interference.sum())
         x_, y_ = test_env.senario_user_local_move(x,y)
         userinfo_ = test_env.senario_user_info(x_,y_)
         channel_gain_obs_ = test_env.channel_gain_calculate()
@@ -127,11 +113,7 @@ for i_episode in range(episode):
         observation_array_ = []
         for index in range(4):
             observation_ = channel_gain_obs_[index,:,:]
-            # choose the interference as observation
-            # observation_ = np.zeros((numAPuser,numRU))
-            # for i_user in range(numAPuser):
-            #     for i_ru in range(numRU):
-            #         observation_[i_user, i_ru] = channel_gain_obs_[:,:,:,i_ru].sum(axis=0).sum(axis=0).sum(axis=0) - channel_gain_obs_[i_observation,i_observation,i_user,i_ru]
+
             observation_array_.append(observation_)
             DDPG_agent = agent_array[index]
 
@@ -145,26 +127,15 @@ for i_episode in range(episode):
         x, y= x_, y_
  
         system_bitrate_history.append(system_bitrate)
-        #the less actual interference is, the higher reward_interference is
-        system_interfecence_history.append(1/(system_interference.sum()+1e-7))
         reward_history.append(reward)
         if i == max_iteration-1:
             reward_ave = np.mean(reward_history)
             system_bitrate_ave = np.mean(system_bitrate_history)
-            system_interference_ave = np.mean(system_interfecence_history)
             reward_history = []
             system_bitrate_history = []
             reward_ave_history.append(reward_ave)
             system_ave_bitrate_history.append(system_bitrate_ave)
-            system_ave_interfecence_history.append(system_interference_ave)
             print('i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
 
-dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-dataframe.to_csv("./result/bitrate_"+str(numAPuser)+".csv", index=False,sep=',')
-
-dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-#dataframe.to_csv("./ddpg_result/bitrate_"+str(numAPuser)+".csv", index=False,sep=',')
-dataframe.to_csv("./result/bitrate_reward_change_mulagen.csv", index=False,sep=',')
-
-dataframe_in=pd.DataFrame({'interference':system_ave_interfecence_history})
-dataframe_in.to_csv("./result/interference_reward_change_mulagen.csv", index=False,sep=',')
+# dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
+# dataframe.to_csv("./result/bitrate_"+str(numAPuser)+".csv", index=False,sep=',')

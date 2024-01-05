@@ -321,8 +321,6 @@ class environment_base:
         if self.Linkmode == 'uplink':
             sinr_uplink = np.zeros((self.numAP,self.numUserAP,self.numRU))
             self.n_AP_n_user_bitrate = np.zeros((self.numAP,self.numUserAP,self.numRU))
-            #store the interference
-            interference_sum = 0
             for i in range(self.numAP):
                 interference = np.zeros((self.channel_gain.shape[2:]))
                 interference_uplink = np.zeros((self.numAP,self.numUserAP,self.numRU))
@@ -333,14 +331,11 @@ class environment_base:
                 interference_uplink = interference_uplink.sum(axis=0)
                 #calculate the SINR
                 sinr_uplink[i] = self.signal_strength[i]/(self.N0 + interference_uplink)
-                #store the interference for agent AP
-                if i == 3:
-                    interference_sum+=interference_uplink
                 self.n_AP_n_user_bitrate[i] = self.bwRU * np.log2(1 + sinr_uplink[i])
             self.n_AP_bitrate = self.n_AP_n_user_bitrate.sum(axis=2).sum(axis=1)
             self.system_bitrate = self.n_AP_bitrate.sum(axis=0)
                     
-        return self.system_bitrate, interference_sum
+        return self.system_bitrate
 
 
 
