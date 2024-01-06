@@ -93,7 +93,7 @@ for i_episode in range(episode):
         #only work for 4-agent
         RU_mapper = np.vstack((action_array[0].reshape(1,numAPuser,numRU), action_array[1].reshape(1,numAPuser,numRU), action_array[2].reshape(1,numAPuser,numRU), action_array[3].reshape(1,numAPuser,numRU)))
         system_bitrate = test_env.calculate_4_cells(RU_mapper)
-        key_value = system_bitrate/(1e+4)
+        key_value = system_bitrate/(1e+6)
         reward = key_value
         x_, y_ = test_env.senario_user_local_move(x,y)
         userinfo_ = test_env.senario_user_info(x_,y_)
