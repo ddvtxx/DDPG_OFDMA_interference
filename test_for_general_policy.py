@@ -23,16 +23,15 @@ general_mapper[4,4]=1
 #                     [1, 0, 1, 0, 1, 0, 0, 0]]
 
 RU_mapper = np.vstack((AP123_RU_mapper, general_mapper.reshape(1,5,8)))
-bitrate, interference = test_env.calculate_4_cells(RU_mapper)
+bitrate = test_env.calculate_4_cells(RU_mapper)
 dis = test_env.cal_user_dis(x,y)
 
-print("For the "+str(3)+" AP.")
-for j in range(5):
-    print(str(int(x[3,j]))+","+str(int(y[3,j])))
-    print(dis[3,j])
-    print(test_env.channel_gain[3,3])
-    print("")
+# print("For the "+str(3)+" AP.")
+# for j in range(5):
+#     print(str(int(x[3,j]))+","+str(int(y[3,j])))
+#     print(dis[3,j])
+#     print(test_env.channel_gain[3,3])
+#     print("")
 print(bitrate)
-print(1/(interference.sum()+1e-7))
 
 #分配RU时，考虑干扰！
