@@ -4,7 +4,7 @@ import math
 
 
 class environment_base:
-    def __init__(self,numUserAP,numRU,Linkmode,RU_mode):
+    def __init__(self,numUserAP,numRU,Linkmode,RU_mode,seed=9):
         self.numAP = 4 
         self.numUserAP = numUserAP 
         self.cellShape = 'square'
@@ -24,12 +24,13 @@ class environment_base:
         self.C = 20
         self.X = 0
         self.sigma = 3  
+        self.seed = seed
         return None
 
     def senario_user_local_init(self):
 
-        random.seed(9)
-        np.random.seed(9)
+        random.seed(self.seed)
+        np.random.seed(self.seed)
 
         # Initialization of arrays to hold user locations
         user_local_x_init = np.zeros((self.numAP,self.numUserAP))
