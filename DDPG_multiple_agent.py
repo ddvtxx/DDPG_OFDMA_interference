@@ -127,4 +127,4 @@ for i_episode in range(episode):
             print('i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
 
 dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-dataframe.to_csv("./result/bitrate_multiple_waterFilling_1e-4_1000000.csv", index=False,sep=',')
+dataframe.to_csv("./result/bitrate_multiple_waterFilling_1e-5_1000000.csv", index=False,sep=',')
