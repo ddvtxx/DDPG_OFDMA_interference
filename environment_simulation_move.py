@@ -28,8 +28,8 @@ class environment_base:
 
     def senario_user_local_init(self):
 
-        random.seed(9)
-        np.random.seed(9)
+        random.seed(8)
+        np.random.seed(8)
 
         # Initialization of arrays to hold user locations
         user_local_x_init = np.zeros((self.numAP,self.numUserAP))

@@ -69,39 +69,36 @@ numRU = 8
 numSenario = 4
 linkmode = 'uplink'
 ru_mode = 3
-episode = 2000
+episode = 200
 max_iteration = 200
 system_bitrate_history = []
 system_ave_bitrate_history = []
 test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
+x,y = test_env.senario_user_local_init()
 
 for i_episode in range(episode):
-    x_init,y_init = test_env.senario_user_local_init()
+    userinfo = test_env.senario_user_info(x,y)
+    #(ap,ap,user,ru)
+    channel_gain_obs = test_env.channel_gain_calculate()
+    ru_mapper = test_env.n_AP_RU_mapper()
+    bitrate = test_env.calculate_4_cells(ru_mapper)
+    system_bitrate_history.append(bitrate)
+    x_init,y_init = test_env.senario_user_local_move(x,y)
     x,y = x_init,y_init
     userinfo = test_env.senario_user_info(x,y)
     #(ap,ap,user,ru)
     channel_gain_obs = test_env.channel_gain_calculate()
-    for i_iteration in range(max_iteration):
-        ru_mapper = test_env.n_AP_RU_mapper()
-        ru_mapper = np.vstack((ru_mapper,ru_mapper))
-        bitrate = test_env.calculate_4_cells(ru_mapper)
-        system_bitrate_history.append(bitrate)
-        test_env.senario_user_local_move(x,y)
-        x_init,y_init = test_env.senario_user_local_init()
-        x,y = x_init,y_init
-        userinfo = test_env.senario_user_info(x,y)
-        #(ap,ap,user,ru)
-        channel_gain_obs = test_env.channel_gain_calculate()
-        if i_iteration == max_iteration-1:
-            bitrate_ave = np.mean(system_bitrate_history)
-            system_bitrate_history = []
-            system_ave_bitrate_history.append(bitrate_ave)
-            print('i_episode =',i_episode, 'system_bitrate =',bitrate_ave)
+    # print('i_episode =',i_episode, 'system_bitrate =',bitrate)
+    # print(x)
+bitrate_ave = np.mean(system_bitrate_history)
+print(bitrate_ave)
 
+for i in range(600):
+    system_ave_bitrate_history.append(bitrate_ave)
 
 
 dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-dataframe.to_csv("./result/bitrate_water_filling_general.csv", index=False,sep=',')
+dataframe.to_csv("./result/bitrate_water_filling_general_seed_8.csv", index=False,sep=',')
 
 
 # channel_gains = np.array([
