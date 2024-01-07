@@ -303,6 +303,43 @@ class environment_base:
                             user_list.remove(max_key)
                             ru_3AP[k,max_key,i] = 1
             self.ru_mapper = ru_3AP
+        elif self.RU_mode == 4:
+            #self.numRU from 8 to 80
+            # Initialize variables to store channel gains and RU allocations.
+            AP_user_channel_gain = np.zeros((4,self.numUserAP,self.numRU))
+            ru_3AP = np.zeros((4,self.numUserAP,self.numRU))
+            # Get the channel gain between the same APs.
+            for i in range(4):
+                for j in range(4):
+                    if i == j:
+                        AP_user_channel_gain[i,:,:] = self.channel_gain[i][j] 
+            
+            for k in range(4):
+                user_list = [1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,0,0,0]
+                key = AP_user_channel_gain[k,:,:]
+                
+                #change 8 to self.numRU
+                for i in range(self.numRU): 
+                    max_key = np.argmax(key[:,i])
+                    if self.numUserAP <=2:
+                        if max_key in user_list :
+                            ru_3AP[k,max_key,i] = 1
+                            user_list.remove(max_key) 
+                        
+                    if self.numUserAP >2:
+                        if max_key in user_list :
+                            ru_3AP[k,max_key,i] = 1
+                            user_list.remove(max_key) 
+                        else:
+                            key[max_key,:] = 0
+                            max_key = np.argmax(key[:,i])
+                            if max_key not in user_list:
+                                key[max_key,:] = 0
+                                max_key = np.argmax(key[:,i])
+                            
+                            user_list.remove(max_key)
+                            ru_3AP[k,max_key,i] = 1
+            self.ru_mapper = ru_3AP
         return self.ru_mapper
 
     def water_filling(self, channel_gains, P_total, epsilon=1e-5, max_iterations=1000):
