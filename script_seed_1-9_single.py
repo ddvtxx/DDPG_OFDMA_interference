@@ -114,4 +114,4 @@ for i_seed in range(1,16):
                 system_ave_bitrate_history.append(system_bitrate_ave)
                 print('i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
     dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-    dataframe.to_csv("./result/bitrate_water_filling_seed_"+str(i_seed)+".csv", index=False,sep=',')
+    dataframe.to_csv("./result/bitrate_single_wf_seed_"+str(i_seed)+".csv", index=False,sep=',')
