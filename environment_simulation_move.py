@@ -269,15 +269,15 @@ class environment_base:
         elif self.RU_mode == 3:
             #self.numRU from 8 to 80
             # Initialize variables to store channel gains and RU allocations.
-            AP_user_channel_gain = np.zeros((4,self.numUserAP,self.numRU))
+            AP_user_channel_gain = np.zeros((3,self.numUserAP,self.numRU))
             ru_3AP = np.zeros((4,self.numUserAP,self.numRU))
             # Get the channel gain between the same APs.
-            for i in range(4):
-                for j in range(4):
+            for i in range(3):
+                for j in range(3):
                     if i == j:
                         AP_user_channel_gain[i,:,:] = self.channel_gain[i][j] 
             
-            for k in range(4):
+            for k in range(3):
                 user_list = [1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,0,0,0]
                 key = AP_user_channel_gain[k,:,:]
                 
@@ -369,16 +369,16 @@ class environment_base:
     def calculate_4_cells(self,ru_mapper_nAP):
 
         self.signal_strength = np.array(list(map(lambda x:self.channel_gain[x][x] * ru_mapper_nAP[x],range(self.channel_gain.shape[0]))))
-        #get how many ru do a certain user have
-        ru_per_user = ru_mapper_nAP.sum(axis=2) 
-        ru_per_user = ru_per_user.reshape(self.numAP, self.numUserAP ,1 )
-        ru_per_user = np.tile(ru_per_user, (1,1,self.numRU))
-        ru_per_user_picked = ru_per_user == 0
-        ru_per_user = ru_per_user + ru_per_user_picked.astype(int)
-        #allocate signal power averagely due to 
-        self.signal_strength = self.signal_strength / ru_per_user
-        # power_allocation = self.water_filling(self.signal_strength, 1)
-        # self.signal_strength = self.signal_strength*power_allocation
+        # #get how many ru do a certain user have
+        # ru_per_user = ru_mapper_nAP.sum(axis=2) 
+        # ru_per_user = ru_per_user.reshape(self.numAP, self.numUserAP ,1 )
+        # ru_per_user = np.tile(ru_per_user, (1,1,self.numRU))
+        # ru_per_user_picked = ru_per_user == 0
+        # ru_per_user = ru_per_user + ru_per_user_picked.astype(int)
+        # #allocate signal power averagely due to 
+        # self.signal_strength = self.signal_strength / ru_per_user
+        power_allocation = self.water_filling(self.signal_strength, 1)
+        self.signal_strength = self.signal_strength*power_allocation
         
         if self.Linkmode == 'uplink':
             sinr_uplink = np.zeros((self.numAP,self.numUserAP,self.numRU))
@@ -388,8 +388,8 @@ class environment_base:
                 interference_uplink = np.zeros((self.numAP,self.numUserAP,self.numRU))
                 for j in range(self.numAP):
                     if i!=j:
-                        # interference = (self.channel_gain[i][j]*ru_mapper_nAP[i]*power_allocation[i]).sum(axis=0).reshape(1,self.numRU)
-                        interference = (self.channel_gain[i][j]*ru_mapper_nAP[i]/ru_per_user[i]).sum(axis=0).reshape(1,self.numRU)
+                        interference = (self.channel_gain[i][j]*ru_mapper_nAP[i]*power_allocation[i]).sum(axis=0).reshape(1,self.numRU)
+                        # interference = (self.channel_gain[i][j]*ru_mapper_nAP[i]/ru_per_user[i]).sum(axis=0).reshape(1,self.numRU)
                         interference_uplink[j] = interference.repeat(self.channel_gain.shape[2],axis=0)
                 interference_uplink = interference_uplink.sum(axis=0)
                 #calculate the SINR
