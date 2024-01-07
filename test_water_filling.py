@@ -98,7 +98,7 @@ for i in range(600):
 
 
 dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-dataframe.to_csv("./result/bitrate_water_filling_general_seed_8.csv", index=False,sep=',')
+dataframe.to_csv("./result/bitrate_water_filling_general_seed_7.csv", index=False,sep=',')
 
 
 # channel_gains = np.array([
