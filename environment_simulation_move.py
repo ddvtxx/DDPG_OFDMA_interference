@@ -4,7 +4,7 @@ import math
 
 
 class environment_base:
-    def __init__(self,numUserAP,numRU,Linkmode,RU_mode,seed=9):
+    def __init__(self,numUserAP,numRU,Linkmode,RU_mode,seed=3):
         self.numAP = 4 
         self.numUserAP = numUserAP 
         self.cellShape = 'square'
