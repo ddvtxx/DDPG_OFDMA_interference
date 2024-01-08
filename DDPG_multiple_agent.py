@@ -38,7 +38,7 @@ for i in range(4):
         critic_fc1_dim=2**6,critic_fc2_dim=2**7,critic_fc3_dim=2**7,
         critic_fc4_dim=2**6,
         ckpt_dir='./DDPG'+str(i)+'/',
-        gamma=0.89,tau=0.001,action_noise=1e-5,max_size=100000,batch_size=128)
+        gamma=0.99,tau=0.001,action_noise=1e-5,max_size=100000,batch_size=128)
     agent_array.append(DDPG_agent)
     create_directory('./DDPG_'+str(i)+'/',sub_paths=['Actor', 'Target_actor', 'Critic', 'Target_critic'])
 
