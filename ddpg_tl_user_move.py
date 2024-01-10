@@ -107,7 +107,6 @@ for i_episode in range(episode):
       system_bitrate_ave = np.mean(system_bitrate_history)
       reward_history = []
       system_bitrate_history = []
-      system_interfecence_history = []
       reward_ave_history.append(reward_ave)
       system_ave_bitrate_history.append(system_bitrate_ave)
       print('i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
