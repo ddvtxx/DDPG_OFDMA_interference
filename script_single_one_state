@@ -18,7 +18,7 @@ numRU = 8
 numSenario = 4
 linkmode = 'uplink'
 ru_mode = 3
-episode = 2
+episode = 200*600
 # episode = 600
 # max_iteration = 200
 DDPG_agent = DDPG(alpha=1e-4, beta=2e-4,numSenario=numSenario,numAPuser=numAPuser,numRU=numRU,
