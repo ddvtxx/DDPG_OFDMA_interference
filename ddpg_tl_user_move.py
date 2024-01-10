@@ -36,7 +36,6 @@ reward_history = []
 system_bitrate_history = []
 reward_ave_history = []
 system_ave_bitrate_history = []
-system_ave_interfecence_history = []
 #max_bit = 3e+8
 #min_bit = 1e+8
 #action_judge = []
