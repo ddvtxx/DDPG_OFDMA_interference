@@ -26,6 +26,9 @@ class environment_base:
         self.sigma = 3  
         self.seed = seed
         return None
+    
+    def change_random_seed(self, seed):
+        self.seed = seed
 
     def senario_user_local_init(self):
 
