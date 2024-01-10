@@ -96,4 +96,4 @@ for i_episode in range(episode):
     print('i_episode =',i_episode, 'reward =',reward, 'system_bitrate =',system_bitrate)
     if i_episode == episode-1:
         dataframe=pd.DataFrame({'bitrate':system_bitrate_history})
-        dataframe.to_csv("./result/bitrate_single_one_state.csv", index=False,sep=',')
+        dataframe.to_csv("./result/bitrate_multiple_one_state.csv", index=False,sep=',')
