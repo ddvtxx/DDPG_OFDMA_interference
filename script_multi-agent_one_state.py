@@ -39,7 +39,7 @@ test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
 
 #Learning
 for i_episode in range(episode):
-    test_env.change_random_seed(i_episode)
+    test_env.change_random_seed(i_episode%600)
     x, y = test_env.senario_user_local_init()
     userinfo = test_env.senario_user_info(x,y)
     channel_gain_obs = test_env.channel_gain_calculate()
@@ -103,7 +103,7 @@ for i_episode in range(episode):
 reward_array = []
 for i_test in range(100):
     random.seed(0)
-    random_number = random.randint(0, 119999)
+    random_number = random.randint(0, 199)
     test_env.change_random_seed(random_number)
     x,y = test_env.senario_user_local_init()
     userinfo = test_env.senario_user_info(x,y)
