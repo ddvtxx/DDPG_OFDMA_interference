@@ -224,6 +224,8 @@ class environment_base:
         #(ap,ap,user,ru)
         return self.channel_gain
     
+    def change_RU_mode(self, mode):
+        self.RU_mode = mode
 
     def n_AP_RU_mapper(self):
         # Mode 1: Each user is assigned to a distinct RU without overlap.
@@ -436,7 +438,7 @@ class environment_base:
             self.n_AP_bitrate = self.n_AP_n_user_bitrate.sum(axis=2).sum(axis=1)
             self.system_bitrate = self.n_AP_bitrate.sum(axis=0)
                     
-        return self.system_bitrate
+        return self.system_bitrate, sinr_uplink
 
 
 
