@@ -15,10 +15,10 @@ print(T.__version__)
 #can only deal with 10 users per ap at most
 numAPuser = 5
 numRU = 8
-numSenario = 4
+numSenario = 1
 linkmode = 'uplink'
 ru_mode = 4
-episode = 100
+episode = 600
 max_iteration = 200
 test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
 
@@ -56,7 +56,7 @@ for i_episode in range(episode):
 
         for i_agent in range(4):
             DDPG_agent = agent_array[i_agent]
-            action_pre = DDPG_agent.choose_action(observation,train=True)
+            action_pre = DDPG_agent.choose_action(observation[i_agent].reshape((1, numAPuser, numRU)),train=True)
             user_list = [1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,0,0,0]
             action_pre = action_pre.reshape(numAPuser,numRU)
             action_0 = np.zeros_like(action_pre)
@@ -86,7 +86,7 @@ for i_episode in range(episode):
         #only work for 4-agent
         RU_mapper = np.vstack((action_array[0].reshape(1,numAPuser,numRU), action_array[1].reshape(1,numAPuser,numRU), action_array[2].reshape(1,numAPuser,numRU), action_array[3].reshape(1,numAPuser,numRU)))
         system_bitrate, observation_ = test_env.calculate_4_cells(RU_mapper)
-        key_value = system_bitrate/(1e+4)
+        key_value = system_bitrate/(1e+6)
         reward = key_value
         x_, y_ = test_env.senario_user_local_move(x,y)
         userinfo_ = test_env.senario_user_info(x_,y_)
@@ -94,7 +94,7 @@ for i_episode in range(episode):
 
         for i_agent in range(4):
             action = action_array[i_agent]
-            DDPG_agent.remember(observation, action, reward, observation_, done=False)
+            DDPG_agent.remember(observation[i_agent].reshape((1, numAPuser, numRU)), action, reward, observation_[i_agent].reshape((1, numAPuser, numRU)), done=False)
             DDPG_agent.learn()
         observation = observation_
         x, y= x_, y_
