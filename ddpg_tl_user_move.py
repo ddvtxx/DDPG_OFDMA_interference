@@ -31,16 +31,10 @@ DDPG_agent = DDPG(alpha=1e-4, beta=2e-4,numSenario=numSenario,numAPuser=numAPuse
       ckpt_dir='./DDPG/',
       gamma=0.99,tau=0.001,action_noise=1e-5,max_size=100000,batch_size=128)
 create_directory('./DDPG/',sub_paths=['Actor', 'Target_actor', 'Critic', 'Target_critic'])
-#test_name = 'tanlan_junfen'
 reward_history = []
 system_bitrate_history = []
 reward_ave_history = []
 system_ave_bitrate_history = []
-system_ave_interfecence_history = []
-#max_bit = 3e+8
-#min_bit = 1e+8
-#action_judge = []
-#early_stopping_time = 0
 
 for i_episode in range(episode):
 
@@ -108,7 +102,6 @@ for i_episode in range(episode):
       system_bitrate_ave = np.mean(system_bitrate_history)
       reward_history = []
       system_bitrate_history = []
-      system_interfecence_history = []
       reward_ave_history.append(reward_ave)
       system_ave_bitrate_history.append(system_bitrate_ave)
       print('i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
