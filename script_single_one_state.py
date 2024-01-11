@@ -21,7 +21,7 @@ for index in range(20):
   linkmode = 'uplink'
   ru_mode = 3
   # episode = 2
-  episode = 2000*600
+  episode = 1000*600
   DDPG_agent = DDPG(alpha=1e-4, beta=2e-4,numSenario=numSenario,numAPuser=numAPuser,numRU=numRU,
         actor_fc1_dim=2**6,actor_fc2_dim=2**7,actor_fc3_dim=2**7,
         actor_fc4_dim=2**6,
