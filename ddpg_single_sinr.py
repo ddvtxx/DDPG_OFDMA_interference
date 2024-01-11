@@ -41,7 +41,7 @@ for i_episode in range(episode):
     userinfo = test_env.senario_user_info(x,y)
     channel_gain_obs = test_env.channel_gain_calculate()
     RU_mapper = test_env.n_AP_RU_mapper()
-    system_bitrate, observation = test_env.calculate_4_cells()
+    system_bitrate, observation = test_env.calculate_4_cells(RU_mapper)
     system_bitrate_history.append(system_bitrate)
     test_env.change_RU_mode(3)
     for i_iteration in range(max_iteration):
