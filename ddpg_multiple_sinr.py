@@ -18,7 +18,7 @@ numRU = 8
 numSenario = 4
 linkmode = 'uplink'
 ru_mode = 4
-episode = 600
+episode = 100
 max_iteration = 200
 test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
 
@@ -49,7 +49,7 @@ for i_episode in range(episode):
     channel_gain_obs = test_env.channel_gain_calculate()
     RU_mapper = test_env.n_AP_RU_mapper()
     system_bitrate, observation = test_env.calculate_4_cells(RU_mapper)
-    system_bitrate_history.append(system_bitrate)
+    # system_bitrate_history.append(system_bitrate)
     test_env.change_RU_mode(3)
     for i_iteration in range(max_iteration):
         action_array = []
@@ -65,7 +65,7 @@ for i_episode in range(episode):
                 if numAPuser <=2:
                     if max_key in user_list:
                         action_0[max_key,k] = 1
-                        user_list.remove(max_key)   
+                        user_list.remove(max_key)
                 else:       
                     if max_key in user_list:
                         action_0[max_key,k] = 1
@@ -86,7 +86,7 @@ for i_episode in range(episode):
         #only work for 4-agent
         RU_mapper = np.vstack((action_array[0].reshape(1,numAPuser,numRU), action_array[1].reshape(1,numAPuser,numRU), action_array[2].reshape(1,numAPuser,numRU), action_array[3].reshape(1,numAPuser,numRU)))
         system_bitrate, observation_ = test_env.calculate_4_cells(RU_mapper)
-        key_value = system_bitrate/(1e+6)
+        key_value = system_bitrate/(1e+4)
         reward = key_value
         x_, y_ = test_env.senario_user_local_move(x,y)
         userinfo_ = test_env.senario_user_info(x_,y_)
