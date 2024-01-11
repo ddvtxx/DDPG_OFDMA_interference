@@ -83,33 +83,33 @@ for i_episode in range(episode):
             action_1 = action_0.reshape(1, numAPuser, numRU)
             action_array.append(action_0)
 
-            #only work for 4-agent
-            RU_mapper = np.vstack((action_array[0].reshape(1,numAPuser,numRU), action_array[1].reshape(1,numAPuser,numRU), action_array[2].reshape(1,numAPuser,numRU), action_array[3].reshape(1,numAPuser,numRU)))
-            system_bitrate, observation_ = test_env.calculate_4_cells(RU_mapper)
-            key_value = system_bitrate/(1e+6)
-            reward = key_value
-            x_, y_ = test_env.senario_user_local_move(x,y)
-            userinfo_ = test_env.senario_user_info(x_,y_)
-            channel_gain_obs_ = test_env.channel_gain_calculate()
+        #only work for 4-agent
+        RU_mapper = np.vstack((action_array[0].reshape(1,numAPuser,numRU), action_array[1].reshape(1,numAPuser,numRU), action_array[2].reshape(1,numAPuser,numRU), action_array[3].reshape(1,numAPuser,numRU)))
+        system_bitrate, observation_ = test_env.calculate_4_cells(RU_mapper)
+        key_value = system_bitrate/(1e+6)
+        reward = key_value
+        x_, y_ = test_env.senario_user_local_move(x,y)
+        userinfo_ = test_env.senario_user_info(x_,y_)
+        channel_gain_obs_ = test_env.channel_gain_calculate()
 
-            for i_agent in range(4):
-                action = action_array[i_agent]
-                DDPG_agent.remember(observation, action, reward, observation_, done=False)
-                DDPG_agent.learn()
-            observation = observation_
-            x, y= x_, y_
+        for i_agent in range(4):
+            action = action_array[i_agent]
+            DDPG_agent.remember(observation, action, reward, observation_, done=False)
+            DDPG_agent.learn()
+        observation = observation_
+        x, y= x_, y_
 
-            system_bitrate_history.append(system_bitrate)
-            reward_history.append(reward)
+        system_bitrate_history.append(system_bitrate)
+        reward_history.append(reward)
 
-            if i_iteration == max_iteration-1:
-                reward_ave = np.mean(reward_history)
-                system_bitrate_ave = np.mean(system_bitrate_history)
-                reward_history = []
-                system_bitrate_history = []
-                reward_ave_history.append(reward_ave)
-                system_ave_bitrate_history.append(system_bitrate_ave)
-                print('i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
+        if i_iteration == max_iteration-1:
+            reward_ave = np.mean(reward_history)
+            system_bitrate_ave = np.mean(system_bitrate_history)
+            reward_history = []
+            system_bitrate_history = []
+            reward_ave_history.append(reward_ave)
+            system_ave_bitrate_history.append(system_bitrate_ave)
+            print('i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
 
 dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
 dataframe.to_csv("./result/bitrate_multiple_sinr.csv", index=False,sep=',')
