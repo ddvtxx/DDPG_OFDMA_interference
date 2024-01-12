@@ -19,7 +19,7 @@ for i_loop in range(1):
     numSenario = 1
     linkmode = 'uplink'
     ru_mode = 4
-    episode = 15000
+    episode = 600
     max_iteration = 200
     test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
 
@@ -61,6 +61,7 @@ for i_loop in range(1):
                 action_pre = DDPG_agent.choose_action(observation[i_agent].reshape((1, numAPuser, numRU)),train=True)
                 user_list = [1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,0,0,0]
                 action_pre = action_pre.reshape(numAPuser,numRU)
+                # action_0 = action_pre
                 action_0 = np.zeros_like(action_pre)
                 for k in range(numRU):
                     max_key = np.argmax(action_pre[:,k])
@@ -90,14 +91,22 @@ for i_loop in range(1):
             system_bitrate = test_env.calculate_4_cells(RU_mapper)
             observation_ = test_env.get_sinr()
             key_value = system_bitrate/(1e+6)
+            
+            
             reward = key_value
+            reward = np.zeros((4))
+            for i_reward in range(4):
+                # reward[i_reward] = (system_bitrate/10 - RU_mapper[i_reward].sum()*test_env.bwRU)/(1e+4)-1100
+                reward[i_reward] = key_value
+
+            
             x_, y_ = test_env.senario_user_local_move(x,y)
             userinfo_ = test_env.senario_user_info(x_,y_)
             channel_gain_obs_ = test_env.channel_gain_calculate()
 
             for i_agent in range(4):
                 action = action_array[i_agent]
-                DDPG_agent.remember(observation[i_agent].reshape((1, numAPuser, numRU)), action, reward, observation_[i_agent].reshape((1, numAPuser, numRU)), done=False)
+                DDPG_agent.remember(observation[i_agent].reshape((1, numAPuser, numRU)), action, reward[i_agent], observation_[i_agent].reshape((1, numAPuser, numRU)), done=False)
                 DDPG_agent.learn()
             observation = observation_
             x, y= x_, y_
