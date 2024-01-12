@@ -5,7 +5,7 @@ numAPuser = 5
 numRU = 8
 numSenario = 4
 linkmode = 'uplink'
-ru_mode = 3
+ru_mode = 4
 episode = 2000
 max_iteration = 200
 test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
@@ -15,11 +15,7 @@ userinfo = test_env.senario_user_info(x,y)
 channel_gain_obs = test_env.channel_gain_calculate()
 #(ap,ap,user,ru)
 ru_mapper = test_env.n_AP_RU_mapper()
-strength_tem = channel_gain_obs[0][0] * ru_mapper
-strength_sum = strength_tem.sum(axis=2)
-# print(range(channel_gain_obs.shape[0]))
-# for strength_total in strength_sum:
-#     for i in range():
+system_bitrate = test_env.calculate_4_cells(ru_mapper)
+ru_per_user = test_env.get_ru_per_user()
 
-print(strength_sum)
-
+print(system_bitrate/10-ru_mapper[0].sum()*test_env.bwRU)
