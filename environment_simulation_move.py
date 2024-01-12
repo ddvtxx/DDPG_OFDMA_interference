@@ -421,7 +421,7 @@ class environment_base:
         self.signal_strength = self.signal_strength*power_allocation
         
         if self.Linkmode == 'uplink':
-            sinr_uplink = np.zeros((self.numAP,self.numUserAP,self.numRU))
+            self.sinr_uplink = np.zeros((self.numAP,self.numUserAP,self.numRU))
             self.n_AP_n_user_bitrate = np.zeros((self.numAP,self.numUserAP,self.numRU))
             for i in range(self.numAP):
                 interference = np.zeros((self.channel_gain.shape[2:]))
@@ -433,12 +433,15 @@ class environment_base:
                         interference_uplink[j] = interference.repeat(self.channel_gain.shape[2],axis=0)
                 interference_uplink = interference_uplink.sum(axis=0)
                 #calculate the SINR
-                sinr_uplink[i] = self.signal_strength[i]/(self.N0 + interference_uplink)
-                self.n_AP_n_user_bitrate[i] = self.bwRU * np.log2(1 + sinr_uplink[i])
+                self.sinr_uplink[i] = self.signal_strength[i]/(self.N0 + interference_uplink)
+                self.n_AP_n_user_bitrate[i] = self.bwRU * np.log2(1 + self.sinr_uplink[i])
             self.n_AP_bitrate = self.n_AP_n_user_bitrate.sum(axis=2).sum(axis=1)
             self.system_bitrate = self.n_AP_bitrate.sum(axis=0)
                     
-        return self.system_bitrate, sinr_uplink
+        return self.system_bitrate
+    
+    def get_sinr(self):
+        return self.sinr_uplink
 
 
 

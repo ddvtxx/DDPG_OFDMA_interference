@@ -49,7 +49,8 @@ for i_loop in range(1):
         userinfo = test_env.senario_user_info(x,y)
         channel_gain_obs = test_env.channel_gain_calculate()
         RU_mapper = test_env.n_AP_RU_mapper()
-        system_bitrate, observation = test_env.calculate_4_cells(RU_mapper)
+        system_bitrate = test_env.calculate_4_cells(RU_mapper)
+        observation = test_env.get_sinr()
         # system_bitrate_history.append(system_bitrate)
         test_env.change_RU_mode(3)
         for i_iteration in range(max_iteration):
@@ -86,7 +87,8 @@ for i_loop in range(1):
 
             #only work for 4-agent
             RU_mapper = np.vstack((action_array[0].reshape(1,numAPuser,numRU), action_array[1].reshape(1,numAPuser,numRU), action_array[2].reshape(1,numAPuser,numRU), action_array[3].reshape(1,numAPuser,numRU)))
-            system_bitrate, observation_ = test_env.calculate_4_cells(RU_mapper)
+            system_bitrate = test_env.calculate_4_cells(RU_mapper)
+            observation_ = test_env.get_sinr()
             key_value = system_bitrate/(1e+6)
             reward = key_value
             x_, y_ = test_env.senario_user_local_move(x,y)
