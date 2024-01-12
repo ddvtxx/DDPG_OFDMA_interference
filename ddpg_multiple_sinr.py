@@ -12,14 +12,14 @@ from DDPG_agent import DDPG
 import random
 print(T.__version__)
 
-for i_loop in range(9):
+for i_loop in range(1):
     #can only deal with 10 users per ap at most
     numAPuser = 5
     numRU = 8
     numSenario = 1
     linkmode = 'uplink'
     ru_mode = 4
-    episode = 600
+    episode = 15000
     max_iteration = 200
     test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
 
@@ -112,5 +112,5 @@ for i_loop in range(9):
                 system_ave_bitrate_history.append(system_bitrate_ave)
                 print('i_loop =', i_loop,'i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
 
-    dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-    dataframe.to_csv("./result/bitrate_multiple_sinr_"+str(i_loop)+".csv", index=False,sep=',')
+        dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
+        dataframe.to_csv("./result/bitrate_multiple_sinr_"+str(i_loop)+".csv", index=False,sep=',')
