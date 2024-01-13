@@ -103,10 +103,10 @@ for i_loop in range(1):
                 detail_bitrate_history.append(system_bitrate)
             
             reward = key_value
-            reward = np.zeros((4))
+            reward_array = np.zeros((4))
             for i_reward in range(4):
                 # reward[i_reward] = (system_bitrate/10 - RU_mapper[i_reward].sum()*test_env.bwRU)/(1e+4)-1100
-                reward[i_reward] = key_value
+                reward_array[i_reward] = key_value
 
             
             x_, y_ = test_env.senario_user_local_move(x,y)
@@ -115,7 +115,7 @@ for i_loop in range(1):
 
             for i_agent in range(4):
                 action = action_array[i_agent]
-                DDPG_agent.remember(observation[i_agent].reshape((1, numAPuser, numRU)), action, reward[i_agent], observation_[i_agent].reshape((1, numAPuser, numRU)), done=False)
+                DDPG_agent.remember(observation[i_agent].reshape((1, numAPuser, numRU)), action, reward_array[i_agent], observation_[i_agent].reshape((1, numAPuser, numRU)), done=False)
                 DDPG_agent.learn()
                 if i_episode%20 == 0 and store_loss:
                     critic_loss = DDPG_agent.get_critic_loss()
