@@ -23,6 +23,9 @@ for i_loop in range(1):
     max_iteration = 200
     test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
 
+    store_loss = False
+    store_detail = True
+
     reward_history = []
     system_bitrate_history = []
     reward_ave_history = []
@@ -30,6 +33,8 @@ for i_loop in range(1):
 
     actor_loss_history = []
     critic_loss_history = []
+
+    detail_bitrate_history = []
 
     agent_array = []
     #create four agents for four APs
@@ -94,7 +99,8 @@ for i_loop in range(1):
             system_bitrate = test_env.calculate_4_cells(RU_mapper)
             observation_ = test_env.get_sinr()
             key_value = system_bitrate/(1e+6)
-            
+            if i_episode%20 == 0 and store_detail:
+                detail_bitrate_history.append(system_bitrate)
             
             reward = key_value
             reward = np.zeros((4))
@@ -111,11 +117,11 @@ for i_loop in range(1):
                 action = action_array[i_agent]
                 DDPG_agent.remember(observation[i_agent].reshape((1, numAPuser, numRU)), action, reward[i_agent], observation_[i_agent].reshape((1, numAPuser, numRU)), done=False)
                 DDPG_agent.learn()
-                if i_episode%20 == 0:
+                if i_episode%20 == 0 and store_loss:
                     critic_loss = DDPG_agent.get_critic_loss()
                     actor_loss = DDPG_agent.get_actor_loss()
                     critic_loss_history.append(critic_loss)
-                    actor_loss_history.append(actor_loss)
+                    actor_loss_history.append(actor_loss)                    
 
             observation = observation_
             x, y= x_, y_
@@ -131,13 +137,17 @@ for i_loop in range(1):
                 reward_ave_history.append(reward_ave)
                 system_ave_bitrate_history.append(system_bitrate_ave)
                 print('i_loop =', i_loop,'i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
-                if i_episode%20 == 0:
+                if i_episode%20 == 0 and store_loss:
                     dataframe=pd.DataFrame({'critic_loss':critic_loss_history})
                     dataframe.to_csv("./result/critic_loss_"+str(i_episode)+".csv", index=False,sep=',')
                     dataframe=pd.DataFrame({'actor_loss':actor_loss_history})
                     dataframe.to_csv("./result/actor_loss_"+str(i_episode)+".csv", index=False,sep=',')
                     critic_loss_history = []
                     actor_loss_history = []
+                if i_episode%20 == 0 and store_detail:
+                    dataframe=pd.DataFrame({'critic_loss':detail_bitrate_history})
+                    dataframe.to_csv("./result/detail_bitrate_"+str(i_episode)+".csv", index=False,sep=',')
+                    detail_bitrate_history = []
 
         dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
         dataframe.to_csv("./result/bitrate_multiple_sinr_"+str(i_loop)+".csv", index=False,sep=',')
