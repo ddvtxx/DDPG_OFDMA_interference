@@ -28,6 +28,9 @@ for i_loop in range(1):
     reward_ave_history = []
     system_ave_bitrate_history = []
 
+    actor_loss_history = []
+    critic_loss_history = []
+
     agent_array = []
     #create four agents for four APs
     for i in range(4):
@@ -42,7 +45,7 @@ for i_loop in range(1):
         agent_array.append(DDPG_agent)
         create_directory('./DDPG_'+str(i)+'/',sub_paths=['Actor', 'Target_actor', 'Critic', 'Target_critic'])
 
-    for i_episode in range(episode):
+    for i_episode in range(20, episode):
         test_env.change_RU_mode(4)
         x_init,y_init = test_env.senario_user_local_init()
         x,y = x_init,y_init
@@ -108,6 +111,12 @@ for i_loop in range(1):
                 action = action_array[i_agent]
                 DDPG_agent.remember(observation[i_agent].reshape((1, numAPuser, numRU)), action, reward[i_agent], observation_[i_agent].reshape((1, numAPuser, numRU)), done=False)
                 DDPG_agent.learn()
+                if i_episode%20 == 0:
+                    critic_loss = DDPG_agent.get_critic_loss()
+                    actor_loss = DDPG_agent.get_actor_loss()
+                    critic_loss_history.append(critic_loss)
+                    actor_loss_history.append(actor_loss)
+
             observation = observation_
             x, y= x_, y_
 
@@ -122,6 +131,13 @@ for i_loop in range(1):
                 reward_ave_history.append(reward_ave)
                 system_ave_bitrate_history.append(system_bitrate_ave)
                 print('i_loop =', i_loop,'i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
+                if i_episode%20 == 0:
+                    dataframe=pd.DataFrame({'critic_loss':critic_loss_history})
+                    dataframe.to_csv("./result/critic_loss_"+str(i_episode)+".csv", index=False,sep=',')
+                    dataframe=pd.DataFrame({'actor_loss':actor_loss_history})
+                    dataframe.to_csv("./result/actor_loss_"+str(i_episode)+".csv", index=False,sep=',')
+                    critic_loss_history = []
+                    actor_loss_history = []
 
         dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
         dataframe.to_csv("./result/bitrate_multiple_sinr_"+str(i_loop)+".csv", index=False,sep=',')
