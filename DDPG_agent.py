@@ -112,6 +112,12 @@ class DDPG:
         
         self.update_network_parameters()
     
+    def get_critic_loss(self):
+        return self.critic_loss_show
+    
+    def get_actor_loss(self):
+        return self.critic_loss_show
+    
     def save_models(self, episode):
         self.actor.save_checkpoint(self.checkpoint_dir + 'Actor/DDPG_actor_{}.pth'.format(episode))
         print('Saving actor network successfully!')
