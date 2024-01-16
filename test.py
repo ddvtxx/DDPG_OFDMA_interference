@@ -16,6 +16,16 @@ channel_gain_obs = test_env.channel_gain_calculate()
 #(ap,ap,user,ru)
 ru_mapper = test_env.n_AP_RU_mapper()
 system_bitrate = test_env.calculate_4_cells(ru_mapper)
-ru_per_user = test_env.get_ru_per_user()
+# ru_per_user = test_env.get_ru_per_user()
 
-print(system_bitrate/10-ru_mapper[0].sum()*test_env.bwRU)
+# print(system_bitrate/10-ru_mapper[0].sum()*test_env.bwRU)
+
+RU_mapper = np.zeros((2))
+RU_mapper_next = np.zeros((2))
+
+print('original mapper', RU_mapper)
+RU_mapper_next[0] = 1
+RU_mapper = RU_mapper_next
+print('medium mapper', RU_mapper)
+RU_mapper_next[1] = 1
+print('final mapper', RU_mapper)
