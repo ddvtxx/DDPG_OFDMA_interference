@@ -32,15 +32,11 @@ for i_seed in range(1,16):
         ckpt_dir='./DDPG/',
         gamma=0.99,tau=0.001,action_noise=1e-5,max_size=100000,batch_size=128)
     create_directory('./DDPG/',sub_paths=['Actor', 'Target_actor', 'Critic', 'Target_critic'])
-    #test_name = 'tanlan_junfen'
     reward_history = []
     system_bitrate_history = []
     reward_ave_history = []
     system_ave_bitrate_history = []
-    #max_bit = 3e+8
-    #min_bit = 1e+8
-    #action_judge = []
-    #early_stopping_time = 0
+
 
     for i_episode in range(episode):
 
