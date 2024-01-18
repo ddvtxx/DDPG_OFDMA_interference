@@ -95,7 +95,7 @@ for i_loop in range(6):
             userinfo_ = test_env.senario_user_info(x_,y_)
             channel_gain_obs_ = test_env.channel_gain_calculate()
             done = False
-            DDPG_agent.remember(observation[3], action_0, reward, observation_[3], done)
+            DDPG_agent.remember(observation, action_0, reward, observation_, done)
             DDPG_agent.learn()
             actor_loss = DDPG_agent.get_actor_loss()
             critic_loss = DDPG_agent.get_actor_loss()
