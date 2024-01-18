@@ -66,15 +66,20 @@ for i_loop in range(6):
                         action_0[max_key,k] = 1
                         user_list.remove(max_key)
                     else:
-                        action_pre[max_key,:] = 0
-                        max_key = np.argmax(action_pre[:,k])
-                        if max_key not in user_list:
-                            action_pre[max_key,:] = 0
-                            max_key = np.argmax(action_pre[:,k])      
-                            user_list.remove(max_key)
-                            action_0[max_key,k] = 1
+                        while max_key not in user_list:
+                            action_pre[max_key, :] = 0
+                            max_key = np.argmax(action_pre[:,k])
+                        action_0[max_key, k] = 1
                         user_list.remove(max_key)
-                        action_0[max_key,k] = 1
+                        # action_pre[max_key,:] = 0
+                        # max_key = np.argmax(action_pre[:,k])
+                        # if max_key not in user_list:
+                        #     action_pre[max_key,:] = 0
+                        #     max_key = np.argmax(action_pre[:,k])      
+                        #     user_list.remove(max_key)
+                        #     action_0[max_key,k] = 1
+                        # user_list.remove(max_key)
+                        # action_0[max_key,k] = 1
             action_1=action_0.reshape(1,numAPuser,numRU)
             AP123_RU_mapper = test_env.n_AP_RU_mapper()
             RU_mapper = np.vstack((AP123_RU_mapper,action_1))
