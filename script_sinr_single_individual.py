@@ -13,7 +13,7 @@ from DDPG_agent import DDPG
 import random
 print(T.__version__)
 
-for i_loop in range(5):
+for i_loop in range(6):
     #can only deal with 10 users per ap at most
     numAPuser = 5
     numRU = 8
@@ -38,6 +38,8 @@ for i_loop in range(5):
     system_ave_bitrate_history = []
 
     for i_episode in range(episode):
+        actor_loss_history = []
+        critic_loss_history = []
         test_env.change_RU_mode(4)
         x_init,y_init = test_env.senario_user_local_init()
         x,y = x_init,y_init
@@ -90,6 +92,11 @@ for i_loop in range(5):
             done = False
             DDPG_agent.remember(observation, action_0, reward, observation_, done)
             DDPG_agent.learn()
+            actor_loss = DDPG_agent.get_actor_loss()
+            critic_loss = DDPG_agent.get_actor_loss()
+            actor_loss_history.append(actor_loss)
+            critic_loss_history.append(critic_loss)
+
             observation = observation_
             x,y=x_,y_
 
@@ -104,3 +111,12 @@ for i_loop in range(5):
                 reward_ave_history.append(reward_ave)
                 system_ave_bitrate_history.append(system_bitrate_ave)
                 print('i_loop =', i_loop, 'i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
+        
+        if i_episode % 50 == 0 and i_loop%2 == 0:
+            dataframe=pd.DataFrame({'bitrate':actor_loss_history})
+            dataframe.to_csv("./result/actor_loss_sinr_single_individual_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
+            dataframe=pd.DataFrame({'bitrate':critic_loss_history})
+            dataframe.to_csv("./result/critic_loss_sinr_single_individual_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
+
+    dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
+    dataframe.to_csv("./result/bitrate_sinr_single_individual_"+str(i_loop)+".csv", index=False,sep=',')
