@@ -22,7 +22,7 @@ for i_loop in range(5):
     ru_mode = 3
     episode = 600
     max_iteration = 200
-    test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode,seed=i_seed)
+    test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
     DDPG_agent = DDPG(alpha=1e-4, beta=2e-4,numSenario=numSenario,numAPuser=numAPuser,numRU=numRU,
         actor_fc1_dim=2**6,actor_fc2_dim=2**7,actor_fc3_dim=2**7,
         actor_fc4_dim=2**6,
@@ -83,7 +83,7 @@ for i_loop in range(5):
 
             key_value = individual_bitrate[3]
             reward = key_value
-            
+
             x_,y_ = test_env.senario_user_local_move(x,y)
             userinfo_ = test_env.senario_user_info(x_,y_)
             channel_gain_obs_ = test_env.channel_gain_calculate()
