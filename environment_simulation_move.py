@@ -441,6 +441,9 @@ class environment_base:
                     
         return self.system_bitrate
     
+    def get_n_AP_n_user_bitrate(self):
+        return self.n_AP_bitrate
+    
     def get_sinr(self):
         return self.sinr_uplink
 
