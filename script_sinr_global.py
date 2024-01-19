@@ -56,7 +56,7 @@ for i_loop in range(6):
             action_0 = np.zeros_like(action_pre)
             user_resource_count = np.zeros((action_pre.shape[0], action_pre.shape[1]), dtype=int)
             for m in range(numSenario):
-                for resource_index in range(action_pre.shape[1]):
+                for resource_index in range(action_pre.shape[2]):
                     user_index = np.argmax(action_pre[m,:,resource_index])
                     if user_resource_count[m,user_index] < 3:
                         action_0[m,user_index,resource_index] = 1
@@ -73,6 +73,7 @@ for i_loop in range(6):
             # action_1=action_0.reshape(1,numAPuser,numRU)
             # AP123_RU_mapper = test_env.n_AP_RU_mapper()
             # RU_mapper = np.vstack((AP123_RU_mapper,action_1))
+        
             system_bitrate = test_env.calculate_4_cells(action_0)
             observation_ = test_env.get_sinr()
 
