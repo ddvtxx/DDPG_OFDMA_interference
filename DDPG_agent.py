@@ -20,16 +20,16 @@ class DDPG:
         self.action_noise = action_noise
         self.checkpoint_dir = ckpt_dir
 
-        self.actor = ActorNetwork(alpha=alpha, state_dim=numSenario*numAPuser*numRU, action_dim=numAPuser*numRU,
+        self.actor = ActorNetwork(alpha=alpha, state_dim=numSenario*numAPuser*numRU, action_dim=numSenario*numAPuser*numRU,
                                   fc1_dim=actor_fc1_dim, fc2_dim=actor_fc2_dim,
                                   fc3_dim=actor_fc3_dim, fc4_dim=actor_fc4_dim)
-        self.target_actor = ActorNetwork(alpha=alpha, state_dim=numSenario*numAPuser*numRU, action_dim=numAPuser*numRU,
+        self.target_actor = ActorNetwork(alpha=alpha, state_dim=numSenario*numAPuser*numRU, action_dim=numSenario*numAPuser*numRU,
                                          fc1_dim=actor_fc1_dim, fc2_dim=actor_fc2_dim,
                                          fc3_dim=actor_fc3_dim, fc4_dim=actor_fc4_dim)
-        self.critic = CriticNetwork(beta=beta, state_dim=numSenario*numAPuser*numRU, action_dim=numAPuser*numRU,
+        self.critic = CriticNetwork(beta=beta, state_dim=numSenario*numAPuser*numRU, action_dim=numSenario*numAPuser*numRU,
                                     fc1_dim=critic_fc1_dim, fc2_dim=critic_fc2_dim,
                                     fc3_dim=critic_fc3_dim, fc4_dim=critic_fc4_dim)
-        self.target_critic = CriticNetwork(beta=beta, state_dim=numSenario*numAPuser*numRU, action_dim=numAPuser*numRU,
+        self.target_critic = CriticNetwork(beta=beta, state_dim=numSenario*numAPuser*numRU, action_dim=numSenario*numAPuser*numRU,
                                            fc1_dim=critic_fc1_dim, fc2_dim=critic_fc2_dim,
                                            fc3_dim=critic_fc3_dim, fc4_dim=critic_fc4_dim)
 

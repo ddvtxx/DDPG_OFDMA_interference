@@ -8,7 +8,7 @@ class ReplayBuffer:
     self.memory_cntr = 0
     self.state_memory = np.zeros((self.memory_size,numSenario,numAPuser,numRU))
     self.next_state_memory = np.zeros((self.memory_size,numSenario,numAPuser,numRU))
-    self.action_memory = np.zeros((self.memory_size,numAPuser,numRU))
+    self.action_memory = np.zeros((self.memory_size,numSenario,numAPuser,numRU))
     self.reward_memory = np.zeros(self.memory_size)
     #self.terminal_memory = np.zeros(self.memory_size,dtype=np.bool)
     self.terminal_memory = np.zeros(self.memory_size,dtype=np.bool_)
@@ -17,7 +17,7 @@ class ReplayBuffer:
     index = self.memory_cntr%self.memory_size
     self.state_memory[index,:,:,:] = state
     self.next_state_memory[index,:,:,:] = next_state
-    self.action_memory[index,:,:] = action
+    self.action_memory[index,:,:,:] = action
     self.reward_memory[index] = reward
     self.terminal_memory[index] = done
     self.memory_cntr += 1

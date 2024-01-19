@@ -25,7 +25,7 @@ class ActorNetwork(nn.Module):
                  fc1_dim, fc2_dim, fc3_dim, fc4_dim):
         super(ActorNetwork, self).__init__()
         # Flatten the incoming state
-        self.input_layer = nn.Flatten(1,3) 
+        self.input_layer = nn.Flatten() 
         # self.input_layer = nn.Flatten(0,1)
         # Define the fully connected layers with LayerNorm
         self.fc1 = nn.Linear(state_dim, fc1_dim) 
@@ -55,7 +55,7 @@ class ActorNetwork(nn.Module):
         # Apply Gumbel-Softmax to get a differentiable sample
         action = F.gumbel_softmax(self.action(x), tau=1, hard=False, eps = 1e-5) 
         # Reshape the action to match the input state dimensions
-        action = T.reshape(action,(state.shape[0],state.shape[2],state.shape[3]))
+        # action = T.reshape(action,(state.shape[0],state.shape[2],state.shape[3]))
         return action
     
     # Function for saving the network's state
@@ -71,7 +71,8 @@ class CriticNetwork(nn.Module):
     def __init__(self, beta, state_dim, action_dim, 
                  fc1_dim, fc2_dim, fc3_dim, fc4_dim):
         super(CriticNetwork, self).__init__()
-        self.input_layer = nn.Flatten(1,3) 
+        # self.input_layer = nn.Flatten(1,3) 
+        self.input_layer = nn.Flatten(1,-1) 
         # self.input_layer = nn.Flatten(0,1)
         self.fc1 = nn.Linear(state_dim*2, fc1_dim) 
         self.ln1 = nn.LayerNorm(fc1_dim)
@@ -90,10 +91,11 @@ class CriticNetwork(nn.Module):
 
     def forward(self, state, action):  
       
-        action = T.unsqueeze(action,1) 
-        action = action.expand(state.shape) 
-        
-        state_action = T.cat((state,action),1) 
+        # action = T.unsqueeze(action,1) 
+        # action = action.expand(state.shape)
+        state_shape = state.shape
+        action = action.reshape((state_shape[0],state_shape[1],state_shape[2],state_shape[3]))
+        state_action = T.cat((state,action),2) 
         x = T.relu(self.ln1(self.fc1(self.input_layer(state_action))))
         x = T.relu(self.ln2(self.fc2(x)))
         x = T.relu(self.fc3(x))
