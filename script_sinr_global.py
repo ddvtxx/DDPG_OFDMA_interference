@@ -61,18 +61,6 @@ for i_loop in range(6):
                     if user_resource_count[m,user_index] < 3:
                         action_0[m,user_index,resource_index] = 1
                         user_resource_count[m,user_index] += 1
-                        # action_pre[max_key,:] = 0
-                        # max_key = np.argmax(action_pre[:,k])
-                        # if max_key not in user_list:
-                        #     action_pre[max_key,:] = 0
-                        #     max_key = np.argmax(action_pre[:,k])      
-                        #     user_list.remove(max_key)
-                        #     action_0[max_key,k] = 1
-                        # user_list.remove(max_key)
-                        # action_0[max_key,k] = 1
-            # action_1=action_0.reshape(1,numAPuser,numRU)
-            # AP123_RU_mapper = test_env.n_AP_RU_mapper()
-            # RU_mapper = np.vstack((AP123_RU_mapper,action_1))
         
             system_bitrate = test_env.calculate_4_cells(action_0)
             observation_ = test_env.get_sinr()
