@@ -45,6 +45,10 @@ for i_loop in range(6):
         x,y = x_init,y_init
         userinfo = test_env.senario_user_info(x,y)
         channel_gain_obs = test_env.channel_gain_calculate()
+        test_env.change_RU_mode(4)
+        general_mapper = test_env.n_AP_RU_mapper()
+        general_bitrate = test_env.calculate_4_cells(general_mapper)
+        test_env.change_RU_mode(3)
         observation = test_env.get_sinr()
         for i_iteration in range(max_iteration):
             action_pre = DDPG_agent.choose_action(observation,train=False)
@@ -91,9 +95,9 @@ for i_loop in range(6):
         
         if i_episode % 50 == 0 and i_loop%2 == 0:
             dataframe=pd.DataFrame({'bitrate':actor_loss_history})
-            dataframe.to_csv("./result/actor_loss_sinr_single_individual_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
+            dataframe.to_csv("./result/actor_loss_sinr_single_global_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
             dataframe=pd.DataFrame({'bitrate':critic_loss_history})
-            dataframe.to_csv("./result/critic_loss_sinr_single_individual_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
+            dataframe.to_csv("./result/critic_loss_sinr_single_global_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
 
     dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
     dataframe.to_csv("./result/bitrate_sinr_single_global_agent_"+str(i_loop)+".csv", index=False,sep=',')
