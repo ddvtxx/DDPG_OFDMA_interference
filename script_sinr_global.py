@@ -20,7 +20,7 @@ for i_loop in range(6):
     numSenario = 4
     linkmode = 'uplink'
     ru_mode = 3
-    episode = 10000
+    episode = 600
     max_iteration = 200
     test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
     DDPG_agent = DDPG(alpha=1e-4, beta=2e-4,numSenario=numSenario,numAPuser=numAPuser,numRU=numRU,
