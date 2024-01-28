@@ -67,9 +67,9 @@ for i_loop in range(6):
 
             key_value = system_bitrate/(1e+4)
             reward = key_value
-            x_,y_ = test_env.senario_user_local_move(x,y)
-            userinfo_ = test_env.senario_user_info(x_,y_)
-            channel_gain_obs_ = test_env.channel_gain_calculate()
+            # x_,y_ = test_env.senario_user_local_move(x,y)
+            # userinfo_ = test_env.senario_user_info(x_,y_)
+            # channel_gain_obs_ = test_env.channel_gain_calculate()
             done = False
             DDPG_agent.remember(observation, action_0, reward, observation_, done)
             DDPG_agent.learn()
@@ -79,7 +79,7 @@ for i_loop in range(6):
             critic_loss_history.append(critic_loss)
 
             observation = observation_
-            x,y=x_,y_
+            # x,y=x_,y_
 
             system_bitrate_history.append(system_bitrate)
             reward_history.append(reward)
@@ -95,9 +95,9 @@ for i_loop in range(6):
         
         if i_episode % 50 == 0 and i_loop%2 == 0:
             dataframe=pd.DataFrame({'bitrate':actor_loss_history})
-            dataframe.to_csv("./result/actor_loss_sinr_single_global_2k_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
+            dataframe.to_csv("./result/actor_loss_sinr_single_global_2k_static_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
             dataframe=pd.DataFrame({'bitrate':critic_loss_history})
-            dataframe.to_csv("./result/critic_loss_sinr_single_global_2k_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
+            dataframe.to_csv("./result/critic_loss_sinr_single_global_2k_static_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
 
     dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-    dataframe.to_csv("./result/bitrate_sinr_single_global_agent_2k_"+str(i_loop)+".csv", index=False,sep=',')
+    dataframe.to_csv("./result/bitrate_sinr_single_global_agent_2k_static_"+str(i_loop)+".csv", index=False,sep=',')
