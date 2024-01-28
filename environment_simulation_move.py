@@ -4,7 +4,7 @@ import math
 
 
 class environment_base:
-    def __init__(self,numUserAP,numRU,Linkmode,RU_mode,seed=3):
+    def __init__(self,numUserAP,numRU,Linkmode,RU_mode,seed=3,move_range = 0.1):
         self.numAP = 4 
         self.numUserAP = numUserAP 
         self.cellShape = 'square'
@@ -25,6 +25,7 @@ class environment_base:
         self.X = 0
         self.sigma = 3  
         self.seed = seed
+        self.move_range = move_range
         return None
 
     def senario_user_local_init(self):
@@ -168,8 +169,8 @@ class environment_base:
         user_local_x_ = np.zeros((self.numAP,self.numUserAP))
         user_local_y_ = np.zeros((self.numAP,self.numUserAP))
         for n in range(self.numAP):
-            user_local_x_[n,] =  np.array(list(map(lambda x: x + random.uniform(-0.1,0.1),x[n,]))) 
-            user_local_y_[n,] =  np.array(list(map(lambda x: x + random.uniform(-0.1,0.1),y[n,]))) 
+            user_local_x_[n,] =  np.array(list(map(lambda x: x + random.uniform(-self.move_range,self.move_range),x[n,]))) 
+            user_local_y_[n,] =  np.array(list(map(lambda x: x + random.uniform(-self.move_range,self.move_range),y[n,]))) 
         user_local_x =  user_local_x_
         user_local_y =  user_local_y_
         return user_local_x,user_local_y
