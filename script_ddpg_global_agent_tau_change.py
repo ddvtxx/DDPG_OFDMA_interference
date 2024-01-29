@@ -96,14 +96,14 @@ for i_loop in range(6):
         
         if i_episode % 50 == 0 and i_loop%2 == 0:
             dataframe=pd.DataFrame({'bitrate':actor_loss_history})
-            dataframe.to_csv("./result/actor_loss_sinr_single_global_2k_huge_move_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
+            dataframe.to_csv("./result/actor_loss_sinr_single_global_2k_tau_change_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
             dataframe=pd.DataFrame({'bitrate':critic_loss_history})
-            dataframe.to_csv("./result/critic_loss_sinr_single_global_2k_huge_move_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
+            dataframe.to_csv("./result/critic_loss_sinr_single_global_2k_tau_change_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
 
-        if i_episode%200==0 and act_tau>=0.1:
+        if i_episode%100==0 and act_tau>=0.1:
             act_tau = act_tau - 0.1
             DDPG_agent.change_act_tau(act_tau)
 
 
     dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-    dataframe.to_csv("./result/bitrate_sinr_single_global_agent_2k_huge_move_"+str(i_loop)+".csv", index=False,sep=',')
+    dataframe.to_csv("./result/bitrate_sinr_single_global_agent_2k_tau_change_"+str(i_loop)+".csv", index=False,sep=',')
