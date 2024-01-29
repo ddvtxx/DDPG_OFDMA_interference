@@ -22,7 +22,7 @@ def weight_init(m):
 
 class ActorNetwork(nn.Module):
     def __init__(self, alpha, state_dim, action_dim, 
-                 fc1_dim, fc2_dim, fc3_dim, fc4_dim):
+                 fc1_dim, fc2_dim, fc3_dim, fc4_dim, act_tau=1):
         super(ActorNetwork, self).__init__()
         # Flatten the incoming state
         self.input_layer = nn.Flatten() 
@@ -38,12 +38,19 @@ class ActorNetwork(nn.Module):
         # The final layer to produce action values
         self.action = nn.Linear(fc4_dim, action_dim)
 
+        self.act_tau = act_tau
+
         # Optimizer for the actor network
         self.optimizer = optim.Adam(self.parameters(), lr=alpha)
         # Apply weight initialization to the network
         self.apply(weight_init)
         # Move the network to the specified device (e.g., GPU)
         self.to(device)
+
+    def change_tau(self, act_tau):
+        self.act_tau = act_tau
+        self.to(device)
+
 
     def forward(self, state):
         # Forward pass through the network with ReLU activations and LayerNorm
@@ -53,7 +60,7 @@ class ActorNetwork(nn.Module):
         x = T.relu(self.fc4(x))
         
         # Apply Gumbel-Softmax to get a differentiable sample
-        action = F.gumbel_softmax(self.action(x), tau=1, hard=False, eps = 1e-5) 
+        action = F.gumbel_softmax(self.action(x), tau=self.act_tau, hard=False, eps = 1e-5) 
         # Reshape the action to match the input state dimensions
         # action = T.reshape(action,(state.shape[0],state.shape[2],state.shape[3]))
         return action

@@ -43,6 +43,10 @@ class DDPG:
         self.actor_loss_show = 0
         self.critic_value_show = 0
         self.target_show = 0
+
+    def change_act_tau(self, act_tau):
+        self.actor.change_tau(act_tau)
+        self.target_actor.change_tau(act_tau)
         
     def update_network_parameters(self, tau=None):
         if tau is None:
