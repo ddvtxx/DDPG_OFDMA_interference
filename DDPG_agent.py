@@ -37,7 +37,8 @@ class DDPG:
                                    numAPuser=numAPuser, numRU=numRU,
                                    batch_size=batch_size)
 
-        self.update_network_parameters(tau=1.0)
+        # self.update_network_parameters(tau=1.0)
+        self.update_network_parameters(self.tau)
 
         self.critic_loss_show = 0
         self.actor_loss_show = 0
