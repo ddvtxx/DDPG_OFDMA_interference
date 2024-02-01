@@ -13,6 +13,8 @@ from DDPG_agent import DDPG
 import random
 print(T.__version__)
 
+bug_action_history = []
+
 for i_seed in range(50):
     for i_loop in range(4):
         numAPuser = 5
@@ -55,6 +57,8 @@ for i_seed in range(50):
                 action_pre = DDPG_agent.choose_action(observation[3],train=False)
                 action_pre = action_pre.reshape(numAPuser,numRU)
                 action_0 = test_env.allocate_RUs(action_pre)
+                if np.sum(action_0 != numRU):
+                    bug_action_history.append(action_0)
                 action_1 = action_pre.reshape(1,numAPuser,numRU)
                 RU_mapper = np.vstack((AP123_RU_mapper,action_1))
                 system_bitrate = test_env.calculate_4_cells(RU_mapper)
@@ -91,3 +95,5 @@ for i_seed in range(50):
 
         dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
         dataframe.to_csv("./result/bitrate_sinr_single_seed_"+str(i_seed)+"_loop_"+str(i_loop)+".csv", index=False,sep=',')
+
+print(bug_action_history)
