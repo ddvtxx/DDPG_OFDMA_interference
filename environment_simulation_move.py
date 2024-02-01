@@ -485,6 +485,42 @@ class environment_base:
                     
         return self.system_bitrate
     
+    #calculate the system bit rate
+    def calculate_4_cells_without_wf(self,ru_mapper_nAP):
+
+        self.signal_strength = np.array(list(map(lambda x:self.channel_gain[x][x] * ru_mapper_nAP[x],range(self.channel_gain.shape[0]))))
+        #get how many ru do a certain user have
+        self.ru_per_user = ru_mapper_nAP.sum(axis=2) 
+        self.ru_per_user = self.ru_per_user.reshape(self.numAP, self.numUserAP ,1 )
+        self.ru_per_user = np.tile(self.ru_per_user, (1,1,self.numRU))
+        ru_per_user_picked = self.ru_per_user == 0
+        self.ru_per_user = self.ru_per_user + ru_per_user_picked.astype(int)
+
+        #allocate signal power averagely due to 
+        self.signal_strength = self.signal_strength / self.ru_per_user
+        # power_allocation = self.water_filling(self.signal_strength, 1)
+        # self.signal_strength = self.signal_strength*power_allocation
+        
+        if self.Linkmode == 'uplink':
+            self.sinr_uplink = np.zeros((self.numAP,self.numUserAP,self.numRU))
+            self.n_AP_n_user_bitrate = np.zeros((self.numAP,self.numUserAP,self.numRU))
+            for i in range(self.numAP):
+                interference = np.zeros((self.channel_gain.shape[2:]))
+                interference_uplink = np.zeros((self.numAP,self.numUserAP,self.numRU))
+                for j in range(self.numAP):
+                    if i!=j:
+                        # interference = (self.channel_gain[i][j]*ru_mapper_nAP[i]*power_allocation[i]).sum(axis=0).reshape(1,self.numRU)
+                        interference = (self.channel_gain[i][j]*ru_mapper_nAP[i]/self.ru_per_user[i]).sum(axis=0).reshape(1,self.numRU)
+                        interference_uplink[j] = interference.repeat(self.channel_gain.shape[2],axis=0)
+                interference_uplink = interference_uplink.sum(axis=0)
+                #calculate the SINR
+                self.sinr_uplink[i] = self.signal_strength[i]/(self.N0 + interference_uplink)
+                self.n_AP_n_user_bitrate[i] = self.bwRU * np.log2(1 + self.sinr_uplink[i])
+            self.n_AP_bitrate = self.n_AP_n_user_bitrate.sum(axis=2).sum(axis=1)
+            self.system_bitrate = self.n_AP_bitrate.sum(axis=0)
+                    
+        return self.system_bitrate
+    
     def get_n_AP_n_user_bitrate(self):
         return self.n_AP_bitrate
     
