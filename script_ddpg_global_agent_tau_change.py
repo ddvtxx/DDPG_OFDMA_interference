@@ -55,13 +55,13 @@ for i_loop in range(6):
             action_pre = DDPG_agent.choose_action(observation,train=False)
             action_pre = action_pre.reshape(numSenario,numAPuser,numRU)
             action_0 = np.zeros_like(action_pre)
-            user_resource_count = np.zeros((action_pre.shape[0], action_pre.shape[1]), dtype=int)
+            # user_resource_count = np.zeros((action_pre.shape[0], action_pre.shape[1]), dtype=int)
             for m in range(numSenario):
                 for resource_index in range(action_pre.shape[2]):
-                    user_index = np.argmax(action_pre[m,:,resource_index])
-                    if user_resource_count[m,user_index] < 3:
-                        action_0[m,user_index,resource_index] = 1
-                        user_resource_count[m,user_index] += 1
+                    user_index = np.argmax(action_pre[m,:,resource_index])  
+                    # if user_resource_count[m,user_index] < 3:
+                    action_0[m,user_index,resource_index] = 1
+                        # user_resource_count[m,user_index] += 1
         
             system_bitrate = test_env.calculate_4_cells(action_0)
             observation_ = test_env.get_sinr()
@@ -100,7 +100,7 @@ for i_loop in range(6):
             dataframe=pd.DataFrame({'bitrate':critic_loss_history})
             dataframe.to_csv("./result/critic_loss_sinr_single_global_2k_tau_change_400_01_07_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
 
-        if i_episode%400==0 and act_tau>0.7:
+        if i_episode%200==0 and act_tau>0.6:
             act_tau = act_tau - 0.1
             DDPG_agent.change_act_tau(act_tau)
 
