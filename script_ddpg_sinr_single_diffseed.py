@@ -81,7 +81,7 @@ for i_seed in range(50):
                     system_bitrate_history = []
                     reward_ave_history.append(reward_ave)
                     system_ave_bitrate_history.append(system_bitrate_ave)
-                    print('i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
+                    print('i_seed =',i_seed,'i_loop =',i_loop,'i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
 
             if i_episode % 50 == 0 and i_loop%2 == 0:
                 dataframe=pd.DataFrame({'bitrate':actor_loss_history})
