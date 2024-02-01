@@ -89,11 +89,11 @@ for i_seed in range(50):
 
             if i_episode % 50 == 0 and i_loop%2 == 0:
                 dataframe=pd.DataFrame({'bitrate':actor_loss_history})
-                dataframe.to_csv("./result/actor_loss_sinr_single_seed_"+str(i_seed)+"_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
+                dataframe.to_csv("./result/actor_loss_sinr_single_no_wf_seed_"+str(i_seed)+"_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
                 dataframe=pd.DataFrame({'bitrate':critic_loss_history})
-                dataframe.to_csv("./result/critic_loss_sinr_single_seed_"+str(i_seed)+"_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
+                dataframe.to_csv("./result/critic_loss_sinr_single_no_wf_seed_"+str(i_seed)+"_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
 
         dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-        dataframe.to_csv("./result/bitrate_sinr_single_seed_"+str(i_seed)+"_loop_"+str(i_loop)+".csv", index=False,sep=',')
+        dataframe.to_csv("./result/bitrate_sinr_single_no_wf_seed_"+str(i_seed)+"_loop_"+str(i_loop)+".csv", index=False,sep=',')
 
 print(bug_action_history)
