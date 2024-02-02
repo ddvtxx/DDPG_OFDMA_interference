@@ -451,7 +451,7 @@ class environment_base:
         return result_matrix
 
 
-    def allocate_RUs_no_min(matrix):
+    def allocate_RUs_no_min(self, matrix):
         rewards = np.array(matrix)
         m, n = rewards.shape
         RUs_per_user = {i: 0 for i in range(m)}

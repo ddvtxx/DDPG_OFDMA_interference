@@ -61,7 +61,7 @@ for i_seed in range(1):
                 AP123_RU_mapper = test_env.n_AP_RU_mapper()
                 action_pre = DDPG_agent.choose_action(observation[3],train=False)
                 action_pre = action_pre.reshape(numAPuser,numRU)
-                action_0 = test_env.allocate_RUs(action_pre)
+                action_0 = test_env.allocate_RUs_no_min(action_pre)
                 #for debuging
                 action_history.append(action_0)
                 pre_history.append(action_pre)
@@ -100,11 +100,11 @@ for i_seed in range(1):
 
             if i_episode % 50 == 0 and i_loop%2 == 0:
                 dataframe=pd.DataFrame({'bitrate':actor_loss_history})
-                dataframe.to_csv("./result/actor_loss_sinr_single_no_wf_seed_"+str(i_seed)+"_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
+                dataframe.to_csv("./result/actor_loss_sinr_single_no_wf_no_min_seed_"+str(i_seed)+"_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
                 dataframe=pd.DataFrame({'bitrate':critic_loss_history})
-                dataframe.to_csv("./result/critic_loss_sinr_single_no_wf_seed_"+str(i_seed)+"_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
+                dataframe.to_csv("./result/critic_loss_sinr_single_no_wf_no_min_seed_"+str(i_seed)+"_loop"+str(i_loop)+"_epis"+str(i_episode)+".csv", index=False,sep=',')
 
         dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-        dataframe.to_csv("./result/bitrate_sinr_single_no_wf_seed_"+str(i_seed)+"_loop_"+str(i_loop)+".csv", index=False,sep=',')
+        dataframe.to_csv("./result/bitrate_sinr_single_no_wf_no_min_seed_"+str(i_seed)+"_loop_"+str(i_loop)+".csv", index=False,sep=',')
 
 print(bug_action_history)
