@@ -451,33 +451,27 @@ class environment_base:
         return result_matrix
 
 
-    def allocate_RUs_no_min(self, matrix):
-        rewards = np.array(matrix)
-        m, n = rewards.shape
-        RUs_per_user = {i: 0 for i in range(m)}
-        allocation = {j: None for j in range(n)}
+    def allocate_RUs_maximize_rewards(self, matrix):
+        m, n = len(matrix), len(matrix[0])
+        # 创建一个列表，包含所有奖励值及对应的人和球
+        rewards = [(matrix[i][j], i, j) for i in range(m) for j in range(n)]
+        # 按照奖励值降序排序
+        rewards.sort(reverse=True)
 
-        # 每个球的分配逻辑
-        for RU in range(n):
-            # 对于每个球，获取奖励值排序
-            sorted_indices = np.argsort(-rewards[:, RU])
+        # 初始化分配
+        allocation = np.zeros((m, n), dtype=int)
+        RUs_per_user = [0] * m
+        RUs_allocated = [False] * n
 
-            # 分配球直到找到合适的人选
-            for user_index in sorted_indices:
-                if RUs_per_user[user_index] < 3:
-                    allocation[RU] = user_index
-                    RUs_per_user[user_index] += 1
-                    break
+        # 遍历排序后的奖励列表
+        for reward, user, RU in rewards:
+            # 如果这个人还没有3个球，且这个球还没有被分配
+            if RUs_per_user[user] < 3 and not RUs_allocated[RU]:
+                allocation[user][RU] = 1
+                RUs_per_user[user] += 1
+                RUs_allocated[RU] = True
 
-        # 创建一个5×8的表格，初始化为0
-        allocation_table = np.zeros((m, n), dtype=int)
-
-        # 填充表格：为每个人拿到的球标记1
-        for RU, user in allocation.items():
-            if user is not None:  # 确保球被分配了
-                allocation_table[user, RU] = 1
-
-        return allocation_table
+        return allocation
 
     #calculate the system bit rate
     def calculate_4_cells(self,ru_mapper_nAP):

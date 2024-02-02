@@ -61,7 +61,7 @@ for i_seed in range(1):
                 AP123_RU_mapper = test_env.n_AP_RU_mapper()
                 action_pre = DDPG_agent.choose_action(observation[3],train=False)
                 action_pre = action_pre.reshape(numAPuser,numRU)
-                action_0 = test_env.allocate_RUs_no_min(action_pre)
+                action_0 = test_env.allocate_RUs_maximize_rewards(action_pre)
                 #for debuging
                 action_history.append(action_0)
                 pre_history.append(action_pre)
