@@ -16,7 +16,7 @@ for i_loop in range(10):
     #can only deal with 10 users per ap at most
     numAPuser = 5
     numRU = 8
-    numSenario = 4
+    numSenario = 1
     linkmode = 'uplink'
     ru_mode = 4
     episode = 600
@@ -47,7 +47,7 @@ for i_loop in range(10):
         system_bitrate_history.append(system_bitrate)
         test_env.change_RU_mode(3)
         for i_iteration in range(max_iteration):
-            action_pre = DDPG_agent.choose_action(observation,train=False)
+            action_pre = DDPG_agent.choose_action(observation[3],train=False)
             user_list = [1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,0,0,0]
             action_pre = action_pre.reshape(numAPuser,numRU)
             action_0 = np.zeros_like(action_pre)
@@ -82,7 +82,7 @@ for i_loop in range(10):
             userinfo_ = test_env.senario_user_info(x_,y_)
             channel_gain_obs_ = test_env.channel_gain_calculate()
             done = False
-            DDPG_agent.remember(observation, action_0, reward, observation_, done)
+            DDPG_agent.remember(observation[3], action_0, reward, observation_[3], done)
             DDPG_agent.learn()
             observation = observation_
             x,y=x_,y_
