@@ -50,7 +50,6 @@ for i_seed in range(50):
             RU_mapper = test_env.n_AP_RU_mapper()
             system_bitrate = test_env.calculate_4_cells_without_wf(RU_mapper)
             observation = test_env.get_sinr()
-            system_bitrate_history.append(system_bitrate)
             test_env.change_RU_mode(3)
             for i_iteration in range(max_iteration):
                 AP123_RU_mapper = test_env.n_AP_RU_mapper()
