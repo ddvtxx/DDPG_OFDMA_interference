@@ -15,7 +15,7 @@ print(T.__version__)
 
 bug_action_history = []
 
-for i_seed in range(50):
+for i_seed in range(1):
     for i_loop in range(4):
         numAPuser = 5
         numRU = 8
@@ -66,7 +66,7 @@ for i_seed in range(50):
                 action_history.append(action_0)
                 pre_history.append(action_pre)
 
-                if np.sum(action_0 != numRU):
+                if np.sum(action_0) != numRU:
                     bug_action_history.append(action_0)
                 action_1 = action_pre.reshape(1,numAPuser,numRU)
                 RU_mapper = np.vstack((AP123_RU_mapper,action_1))
