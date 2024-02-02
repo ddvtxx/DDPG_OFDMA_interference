@@ -205,7 +205,8 @@ class environment_base:
         #path loss
         Lp = self.A * np.log10(self.Userinfo) + self.B + self.C * np.log10(self.fc / 5.0) + self.X 
         #Shadowing component
-        Ls = self.sigma*random.gauss(0,1)       
+        # Ls = self.sigma*random.gauss(0,1)
+        Ls = self.sigma       
         #channel power gain
         h = self.user_Gt_list + self.AP_Gr - Lp - Ls   
         # Initialize an array to store the channel gains for different APs, users, 
