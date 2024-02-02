@@ -39,7 +39,13 @@ for i_seed in range(50):
         reward_ave_history = []
         system_ave_bitrate_history = []
 
+        #for debuging
+        pre_history_history = []
+        action_history_history = []
+
         for i_episode in range(episode):
+            action_history = []
+            pre_history = []
             actor_loss_history = []
             critic_loss_history = []
             test_env.change_RU_mode(4)
@@ -56,6 +62,10 @@ for i_seed in range(50):
                 action_pre = DDPG_agent.choose_action(observation[3],train=False)
                 action_pre = action_pre.reshape(numAPuser,numRU)
                 action_0 = test_env.allocate_RUs(action_pre)
+                #for debuging
+                action_history.append(action_0)
+                pre_history.append(action_pre)
+
                 if np.sum(action_0 != numRU):
                     bug_action_history.append(action_0)
                 action_1 = action_pre.reshape(1,numAPuser,numRU)
@@ -85,6 +95,8 @@ for i_seed in range(50):
                     reward_ave_history.append(reward_ave)
                     system_ave_bitrate_history.append(system_bitrate_ave)
                     print('i_seed =',i_seed,'i_loop =',i_loop,'i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
+                    action_history_history.append(action_history)
+                    pre_history_history.append(pre_history)
 
             if i_episode % 50 == 0 and i_loop%2 == 0:
                 dataframe=pd.DataFrame({'bitrate':actor_loss_history})
