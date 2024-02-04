@@ -119,4 +119,4 @@ for i_seed in range(50):
                 DDPG_agent.change_act_tau(act_tau)
  
         dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
-        dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_bitrate_single_sinr_no_wf_seed_"+str(i_seed)+"_loop_"+str(i_loop)+".csv", index=False,sep=',')
+        dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_bitrate_single_sinr_no_wf_tau_change_seed_"+str(i_seed)+"_loop_"+str(i_loop)+".csv", index=False,sep=',')
