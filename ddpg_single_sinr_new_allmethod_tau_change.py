@@ -15,6 +15,7 @@ print(T.__version__)
 for i_seed in range(13,20):
     for i_loop in range(4):
         #can only deal with 10 users per ap at most
+        act_tau = 1
         numAPuser = 5
         numRU = 8
         numSenario = 1
@@ -49,8 +50,6 @@ for i_seed in range(13,20):
             observation = test_env.get_sinr()
             system_bitrate_history.append(system_bitrate)
             test_env.change_RU_mode(3)
-            if i_episode > 50:
-                DDPG_agent.change_act_tau(0.1)
             for i_iteration in range(max_iteration):
                 action_pre = DDPG_agent.choose_action(observation[3],train=False)
                 user_list = [1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,0,0,0]
@@ -111,9 +110,13 @@ for i_seed in range(13,20):
 
             if i_episode % 50 == 0:
                 dataframe=pd.DataFrame({'bitrate':actor_loss_history})
-                dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_actor_loss_sinr_single_sinr_no_wf_seed_"+str(i_seed)+"_loop_"+str(i_loop)+"_episode_"+str(i_episode)+".csv", index=False,sep=',')
+                dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_actor_loss_sinr_single_sinr_no_wf_tau_change_seed_"+str(i_seed)+"_loop_"+str(i_loop)+"_episode_"+str(i_episode)+".csv", index=False,sep=',')
                 dataframe=pd.DataFrame({'bitrate':critic_loss_history})
-                dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_critic_loss_sinr_single_sinr_no_wf_seed_"+str(i_seed)+"_loop_"+str(i_loop)+"_episode_"+str(i_episode)+".csv", index=False,sep=',')
+                dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_critic_loss_sinr_single_sinr_no_wf_tau_change_seed_"+str(i_seed)+"_loop_"+str(i_loop)+"_episode_"+str(i_episode)+".csv", index=False,sep=',')
 
+            if i_episode % 100 == 0:
+                act_tau-=0.2
+                DDPG_agent.change_act_tau(act_tau)
+ 
         dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
         dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_bitrate_single_sinr_no_wf_seed_"+str(i_seed)+"_loop_"+str(i_loop)+".csv", index=False,sep=',')
