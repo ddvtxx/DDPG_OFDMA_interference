@@ -12,7 +12,7 @@ from DDPG_agent import DDPG
 import random
 print(T.__version__)
 
-for i_seed in range(13,20):
+for i_seed in range(50):
     for i_loop in range(4):
         #can only deal with 10 users per ap at most
         act_tau = 1
