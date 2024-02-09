@@ -107,10 +107,11 @@ for i_seed in range(50):
                     reward_ave_history.append(reward_ave)
                     system_ave_bitrate_history.append(system_bitrate_ave)
                     print('i_seed =',i_seed,'i_loop =', i_loop, 'i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
-                    dataframe=pd.DataFrame({'bitrate':actor_loss_history})
-                    dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_actor_loss_sa_ia_ir_seed_"+str(i_seed)+"_loop_"+str(i_loop)+"_episode_600.csv", index=False,sep=',')
-                    dataframe=pd.DataFrame({'bitrate':critic_loss_history})
-                    dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_critic_loss_sa_ia_ir_seed_"+str(i_seed)+"_loop_"+str(i_loop)+"_episode_600.csv", index=False,sep=',')
+                    if i_episode % 50 == 0:
+                        dataframe=pd.DataFrame({'bitrate':actor_loss_history})
+                        dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_actor_loss_sa_ia_ir_seed_"+str(i_seed)+"_loop_"+str(i_loop)+"_episode_600.csv", index=False,sep=',')
+                        dataframe=pd.DataFrame({'bitrate':critic_loss_history})
+                        dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_critic_loss_sa_ia_ir_seed_"+str(i_seed)+"_loop_"+str(i_loop)+"_episode_600.csv", index=False,sep=',')
 
 
             if i_episode % 50 == 0:
