@@ -51,30 +51,8 @@ for i_seed in range(50):
             test_env.change_RU_mode(3)
             for i_iteration in range(max_iteration):
                 action_pre = DDPG_agent.choose_action(observation[3],train=False)
-                user_list = [1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,0,0,0]
                 action_pre = action_pre.reshape(numAPuser,numRU)
                 action_0 = test_env.allocate_RUs(action_pre)
-                # action_0 = np.zeros_like(action_pre)
-                # for k in range(numRU): 
-                #     max_key = np.argmax(action_pre[:,k])
-                #     if numAPuser <=2:
-                #         if max_key in user_list:
-                #             action_0[max_key,k] = 1
-                #             user_list.remove(max_key)   
-                #     else:       
-                #         if max_key in user_list:
-                #             action_0[max_key,k] = 1
-                #             user_list.remove(max_key)
-                #         else:
-                #             action_pre[max_key,:] = 0
-                #             max_key = np.argmax(action_pre[:,k])
-                #             if max_key not in user_list:
-                #                 action_pre[max_key,:] = 0
-                #                 max_key = np.argmax(action_pre[:,k])      
-                #                 user_list.remove(max_key)
-                #                 action_0[max_key,k] = 1
-                #             user_list.remove(max_key)
-                #             action_0[max_key,k] = 1
                 action_1=action_0.reshape(1,numAPuser,numRU)
                 AP123_RU_mapper = test_env.n_AP_RU_mapper()
                 RU_mapper = np.vstack((AP123_RU_mapper,action_1))
