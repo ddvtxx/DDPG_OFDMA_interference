@@ -86,7 +86,7 @@ for i_seed in range(50):
                     print('i_seed =',i_seed,'i_loop =', i_loop, 'i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
                     
 
-            if (i_episode+1) % 50 == 0:
+            if (i_episode+1) % 50 == 0 or i_episode == 0:
                 dataframe=pd.DataFrame({'bitrate':actor_loss_history})
                 dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_actor_loss_sa_ia_gr_seed_"+str(i_seed)+"_loop_"+str(i_loop)+"_episode_"+str(i_episode)+".csv", index=False,sep=',')
                 dataframe=pd.DataFrame({'bitrate':critic_loss_history})

@@ -51,3 +51,25 @@ for i_seed in range(50):
             for i_iteration in range(max_iteration):
                 action_pre = DDPG_agent.choose_action(observation,train=False)
                 action_pre = action_pre.reshape(numSenario,numAPuser,numRU)
+                action_0 = np.zeros((numSenario, numAPuser, numRU))
+                for i_action in range(4):
+                    action_0[i_action,:,:]=(test_env.allocate_RUs(action_pre[i_action]))
+                system_bitrate = test_env.calculate_4_cells_without_wf(action_0)
+                observation_ = test_env.get_sinr()
+                key_value = system_bitrate/(1e+4)
+                reward = key_value
+                x_,y_ = test_env.senario_user_local_move(x,y)
+                userinfo_ = test_env.senario_user_info(x_,y_)
+                channel_gain_obs_ = test_env.channel_gain_calculate()
+                done = False
+                DDPG_agent.remember(observation, action_0, reward, observation_, done)
+                DDPG_agent.learn()
+                actor_loss = DDPG_agent.get_actor_loss()
+                critic_loss = DDPG_agent.get_actor_loss()
+                actor_loss_history.append(actor_loss)
+                critic_loss_history.append(critic_loss)
+                observation = observation_
+                x,y=x_,y_
+
+                system_bitrate_history.append(system_bitrate)
+                reward_history.append(reward)
