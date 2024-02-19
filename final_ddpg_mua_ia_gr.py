@@ -61,5 +61,44 @@ for i_seed in range(50):
                     action_0 = test_env.allocate_RUs(action_pre)
                     RU_mapper[i_agent,:,:] = action_0
                 system_bitrate = test_env.calculate_4_cells_without_wf(RU_mapper)
-                print("successful")
-        
+                observation_ = test_env.get_sinr()
+                key_value = system_bitrate/(1e+4)
+                reward = key_value
+                x_,y_ = test_env.senario_user_local_move(x,y)
+                userinfo_ = test_env.senario_user_info(x_,y_)
+                channel_gain_obs_ = test_env.channel_gain_calculate()
+                done = False
+                actor_loss = 0
+                critic_loss = 0
+                for i_agent in range(4):
+                    DDPG_agent = agent_array[i_agent]
+                    DDPG_agent.remember(observation[i_agent], RU_mapper[i_agent], reward, observation_[i_agent], done)
+                    actor_loss += DDPG_agent.get_actor_loss()
+                    critic_loss += DDPG_agent.get_critic_loss()
+                actor_loss_history.append(actor_loss)
+                critic_loss_history.append(critic_loss)
+                observation = observation_
+                x,y=x_,y_
+
+                system_bitrate_history.append(system_bitrate)
+                reward_history.append(reward)
+
+
+                if i_iteration == max_iteration-1:
+                    reward_ave = np.mean(reward_history)
+                    system_bitrate_ave = np.mean(system_bitrate_history)
+                    reward_history = []
+                    system_bitrate_history = []
+                    reward_ave_history.append(reward_ave)
+                    system_ave_bitrate_history.append(system_bitrate_ave)
+                    print('i_seed =',i_seed,'i_loop =', i_loop, 'i_episode =',i_episode, 'reward =',reward_ave, 'system_bitrate =',system_bitrate_ave)
+                    
+
+            if (i_episode+1) % 50 == 0 or i_episode == 0:
+                dataframe=pd.DataFrame({'bitrate':actor_loss_history})
+                dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_actor_loss_mua_ia_gr_seed_"+str(i_seed)+"_loop_"+str(i_loop)+"_episode_"+str(i_episode)+".csv", index=False,sep=',')
+                dataframe=pd.DataFrame({'bitrate':critic_loss_history})
+                dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_critic_loss_mua_ia_gr_seed_"+str(i_seed)+"_loop_"+str(i_loop)+"_episode_"+str(i_episode)+".csv", index=False,sep=',')
+ 
+        dataframe=pd.DataFrame({'bitrate':system_ave_bitrate_history})
+        dataframe.to_csv("E:/FYP/Modification Code/DDPG_OFDMA_interference/result/ddpg_bitrate_mua_ia_gr_seed_"+str(i_seed)+"_loop_"+str(i_loop)+".csv", index=False,sep=',')
