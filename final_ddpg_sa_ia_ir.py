@@ -68,7 +68,7 @@ for i_seed in range(50):
                 DDPG_agent.remember(observation[3], action_0, reward, observation_[3], done)
                 DDPG_agent.learn()
                 actor_loss = DDPG_agent.get_actor_loss()
-                critic_loss = DDPG_agent.get_actor_loss()
+                critic_loss = DDPG_agent.get_critic_loss()
                 actor_loss_history.append(actor_loss)
                 critic_loss_history.append(critic_loss)
                 observation = observation_
