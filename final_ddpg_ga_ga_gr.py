@@ -21,7 +21,7 @@ for i_seed in range(50):
         numSenario = 4
         linkmode = 'uplink'
         ru_mode = 3
-        episode = 2000
+        episode = 600
         max_iteration = 200
         test_env = env.environment_base(numAPuser,numRU,linkmode,ru_mode)
         DDPG_agent = DDPG(alpha=1e-4, beta=2e-4,numSenario=numSenario,numAPuser=numAPuser,numRU=numRU,
