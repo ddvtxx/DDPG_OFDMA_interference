@@ -19,9 +19,9 @@ for i_iteration in range(max_iteration):
     channel_gain_obs = test_env.channel_gain_calculate()
     ru_map = np.zeros((4,5,8))
     for i_ap in range(numSenario):
-        for i_user in range(numAPuser):
-            for i_ru in range(numRU):
-                ru_map[i_ap][int(np.random.random()*4)][i_ru] = 1
+        for i_ru in range(numRU):
+            ru_map[i_ap][int(np.random.random()*4)][i_ru] = 1
+    print(ru_map)
     system_bitrate = test_env.calculate_4_cells_without_wf(ru_map)
     x_,y_ = test_env.senario_user_local_move(x,y)
     x, y =x_, y_
