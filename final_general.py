@@ -18,7 +18,11 @@ for i_iteration in range(max_iteration):
     x,y = x_init,y_init
     userinfo = test_env.senario_user_info(x,y)
     channel_gain_obs = test_env.channel_gain_calculate()
-    RU_mapper = test_env.n_AP_RU_mapper()
+    # RU_mapper = test_env.n_AP_RU_mapper()
+    RU_mapper = np.zeros((numSenario, numAPuser, numRU))
+    for i_action in range(4):
+        RU_mapper[i_action,:,:]=(test_env.allocate_RUs(channel_gain_obs[3][i_action]))
+    print(RU_mapper)
     system_bitrate = test_env.calculate_4_cells_without_wf(RU_mapper)
     x_,y_ = test_env.senario_user_local_move(x,y)
     x, y =x_, y_
