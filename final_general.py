@@ -15,6 +15,8 @@ system_bitrate_history = []
 system_ave_bitrate_history = []
 x_init,y_init = test_env.senario_user_local_init()
 x,y = x_init,y_init
+print(x)
+print(y)
 for i_iteration in range(max_iteration):
     userinfo = test_env.senario_user_info(x,y)
     channel_gain_obs = test_env.channel_gain_calculate()
